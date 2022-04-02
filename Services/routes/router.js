@@ -47,6 +47,5 @@ router.route("/get-users").post(GetUsers);
 router.route("/get-user").post(GetUserDetail);
 router.route("/get-user-transactions").post(GetUserTransactions);
 
-
 module.exports = router;
 
