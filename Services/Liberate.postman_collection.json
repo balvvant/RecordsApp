@@ -1,0 +1,3071 @@
+{
+	"info": {
+		"_postman_id": "5aece3cc-e756-4eb6-ba78-ecdd303694aa",
+		"name": "Liberate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "singh.anshuman001@gmail.com",
+									"description": "email of the user",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Password@2",
+									"description": "password - mandatory when logging-in user",
+									"type": "text"
+								},
+								{
+									"key": "activationCode",
+									"value": "01-03-1996",
+									"description": "activation code - mandatory when activating user",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "2",
+									"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GenResetToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "singh.anshuman@hotmail.com",
+									"description": "email of the user",
+									"type": "text"
+								},
+								{
+									"key": "security_answer",
+									"value": "gurgaon",
+									"description": "security answer of the user while selecting the option to reset via security question answer",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "3",
+									"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+									"type": "text"
+								},
+								{
+									"key": "question_id",
+									"value": "1",
+									"description": "security question id being answered by the user while selecting the option to reset via security question answer ( 1-first, 2-second, 3-third )",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/gen-reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"gen-reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetResetToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "d6b4c3d446057e52b73f6f45d19a6eb10b23d2725ef4cf2ae59c4ef7f8cc5514",
+									"description": "reset token from the client to validate to allow to reset the password or not",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "4",
+									"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/get-reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"get-reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostResetToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "d6b4c3d446057e52b73f6f45d19a6eb10b23d2725ef4cf2ae59c4ef7f8cc5514",
+									"description": "reset token against which the password is to be updated",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"description": "password to update",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "4",
+									"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/post-reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"post-reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheckReset",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "singh.anshuman001@gmail.com",
+									"description": "email of the user",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "2",
+									"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/check-reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"check-reset"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "InviteUser",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "dalal.nishu@icycastle.com",
+											"description": "email of the user",
+											"type": "text"
+										},
+										{
+											"key": "activation_code",
+											"value": "01-03-1996",
+											"description": "activation-code from client, if not received, put it dynamic",
+											"type": "text"
+										},
+										{
+											"key": "role",
+											"value": "3",
+											"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/invite-user",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"invite-user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ResendInviteUser",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "2",
+											"description": "user id",
+											"type": "text"
+										},
+										{
+											"key": "role",
+											"value": "2",
+											"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/resend-invite-user",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"resend-invite-user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewUsers",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "role",
+											"value": "3",
+											"description": "user roleId (1 or 2 - admin, 3 - clinician, 4 - patient)",
+											"type": "text"
+										},
+										{
+											"key": "view_records",
+											"value": "1",
+											"description": "Limit of records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "doc",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deleted",
+											"value": "1",
+											"description": "Return the deleted users",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-users",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewHcpList",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "view_records",
+											"value": "10",
+											"description": "Limit of records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "Doc",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "name",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deleted",
+											"value": "1",
+											"description": "Return the deleted results",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-hcp",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-hcp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewAopList",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "jwt",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNpbmdoLmFuc2h1bWFuMDAxQGdtYWlsLmNvbSIsInJvbGUiOjEsInVzZXJJZCI6MSwiaWF0IjoxNTkyNDU5NzMwLCJleHAiOjE1OTI1NDYxMzAsImF1ZCI6IkF1dGhUb2tlbiIsImlzcyI6IkFQSSIsInN1YiI6InJvb3QifQ.2EJrxA3N_1p06mHyIQgR1jCqUDJQ7S6J-kPvrKKsZDU"
+									},
+									{
+										"key": "userid",
+										"type": "text",
+										"value": "1"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "view_records",
+											"value": "10",
+											"description": "Limit of records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "Doc",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "name",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deleted",
+											"value": "1",
+											"description": "Return the deleted results",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-aop",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-aop"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateHcp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "1",
+											"description": "Ids of records to activate or deactivate",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "0",
+											"description": "1 - activate, 0 - deactivate",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-hcp",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-hcp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateAop",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "5",
+											"description": "Ids of records to activate or deactivate",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"description": "1 - activate, 0 - deactivate",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-aop",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-aop"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditHcpItem",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "5",
+											"description": "Id of the record to update",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "TestHcp4",
+											"description": "Name of the record to update or add new",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-hcp",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-hcp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditAopItem",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "5",
+											"description": "Id of the record to update",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "TestAop5",
+											"description": "Name of the record to update or add new",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-aop",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-aop"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "MapUserOrgs",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "3",
+											"description": "If of the user to map to organization",
+											"type": "text"
+										},
+										{
+											"key": "orgIds",
+											"value": "1,2",
+											"description": "Organization Ids to be mapped",
+											"type": "text"
+										},
+										{
+											"key": "removedOrgIds",
+											"value": "3",
+											"description": "Organization Ids to be un-mapped",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/map-user-orgs",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"map-user-orgs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Organization",
+					"item": [
+						{
+							"name": "EditOrganization",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "2",
+											"description": "Id of the organization to update",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Test Company",
+											"description": "Name of the organization",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "India",
+											"description": "Address of the organization",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "copyright_text",
+											"value": "Powered in India",
+											"description": "Copyright Text of the organization",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "country",
+											"value": "GB",
+											"description": "Country of the organization",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "Bristol",
+											"description": "State of the organization",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "122001",
+											"description": "Postal Code of the organization",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Thornbury",
+											"description": "City of the organization",
+											"type": "text"
+										},
+										{
+											"key": "additional_address",
+											"value": "Test",
+											"description": "Additional Address",
+											"type": "text"
+										},
+										{
+											"key": "brand_logo",
+											"description": "Brand Logo of the organization",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-organization",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-organization"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddOrganization",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Company",
+											"description": "Name of the organization",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "India",
+											"description": "Address of the organization",
+											"type": "text"
+										},
+										{
+											"key": "copyright_text",
+											"value": "Powered in India",
+											"description": "Copyright Text of the organization",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "GB",
+											"description": "Country of the organization",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "Bristol",
+											"description": "State of the organization",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "122001",
+											"description": "Postal Code of the organization",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Thornbury",
+											"description": "City of the organization",
+											"type": "text"
+										},
+										{
+											"key": "additional_address",
+											"value": "Test",
+											"description": "Additional Address of the organization",
+											"type": "text"
+										},
+										{
+											"key": "brand_logo",
+											"description": "Brand Logo of the organization",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/add-organization",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"add-organization"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewOrganizations",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "view_records",
+											"value": "10",
+											"description": "Limit of records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "kingdomssdfsdfdsf",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "id",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deleted",
+											"value": "1",
+											"description": "Return the deleted users",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-organizations",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-organizations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "MapCatsOrgs",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "organization_id",
+											"value": "3",
+											"description": "Organization Id",
+											"type": "text"
+										},
+										{
+											"key": "catIds",
+											"value": "1,2,3",
+											"description": "Category Ids to be mapped",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "removedCatIds",
+											"value": "3",
+											"description": "Category Ids to be un-mapped",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/map-cat-orgs",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"map-cat-orgs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateOrganization",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "1",
+											"description": "Organization Ids",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"description": "1 - activate, 2 - deactivate",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-organization",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-organization"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "ViewCategories",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "parent_category_id",
+											"value": "1",
+											"description": "parent Category Id",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_records",
+											"value": "10",
+											"description": "Limit of records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "kingdom",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "id",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deleted",
+											"value": "1",
+											"description": "Return the deleted users",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-categories",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewParentCategories",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "view_records",
+											"value": "10",
+											"description": "Limit results",
+											"type": "text"
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text"
+										},
+										{
+											"key": "search_string",
+											"value": "Treatment",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "id",
+											"description": "Sort by column name",
+											"type": "text"
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-parent-categories",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-parent-categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Depression",
+											"type": "text"
+										},
+										{
+											"key": "category_id",
+											"value": "13",
+											"type": "text"
+										},
+										{
+											"key": "parent_category_id",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-category",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Cat Custom, Tested Cat",
+											"type": "text"
+										},
+										{
+											"key": "parent_category_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/add-category",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"add-category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateCategory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "1,2,3",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-category",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-category"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Others",
+					"item": [
+						{
+							"name": "ViewDashboard",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "jwt",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pc2h1ZGFsYWw1MEBnbWFpbC5jb20iLCJyb2xlIjoxLCJ1c2VySWQiOjEsImlhdCI6MTU4ODc2Mjk5MiwiZXhwIjoxNTg4ODQ5MzkyLCJhdWQiOiJBdXRoVG9rZW4iLCJpc3MiOiJBUEkiLCJzdWIiOiJyb290In0.9YgagX0QIhFW4VCFQLDoehZaLp1XwXMiuzQTce1yTu4"
+									},
+									{
+										"key": "userid",
+										"type": "text",
+										"value": "1"
+									}
+								],
+								"url": {
+									"raw": "http://ec2-13-234-32-75.ap-south-1.compute.amazonaws.com:8080/admin/view-dashboard",
+									"protocol": "http",
+									"host": [
+										"ec2-13-234-32-75",
+										"ap-south-1",
+										"compute",
+										"amazonaws",
+										"com"
+									],
+									"port": "8080",
+									"path": [
+										"admin",
+										"view-dashboard"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Deck",
+					"item": [
+						{
+							"name": "ViewDeckSlider",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "parent_category_id",
+											"value": "2",
+											"description": "Parent Category Id",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_records",
+											"value": "3",
+											"description": "Limit the records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "cancer",
+											"description": "Search string",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "name",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-deck-slider",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-deck-slider"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UploadDeckSlider",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Upload Deck",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckCategoryId",
+											"value": "1",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckSlides",
+											"description": "mandate",
+											"type": "file",
+											"src": [
+												"/C:/Users/kunal/OneDrive/Pictures/Screenshots/Screenshot (1).png",
+												"/C:/Users/kunal/OneDrive/Pictures/Screenshots/Screenshot (2).png",
+												"/C:/Users/kunal/OneDrive/Pictures/Screenshots/Screenshot (3).png"
+											]
+										},
+										{
+											"key": "deckSlidesInfo",
+											"value": "[{\"viewOrder\":1,\"lock\":1},{\"viewOrder\":2,\"lock\":0},{\"viewOrder\":3,\"lock\":0}]",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckAttachments",
+											"description": "optional - PDF",
+											"type": "file",
+											"src": "/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.pdf"
+										},
+										{
+											"key": "deckTags",
+											"value": "allergy,cancer,fever",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "newTags",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "creator",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "locked",
+											"value": "",
+											"description": "0 or 1",
+											"type": "text"
+										},
+										{
+											"key": "lockCode",
+											"value": "",
+											"description": "mandate if locked = 1",
+											"type": "text"
+										},
+										{
+											"key": "organization",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "featured",
+											"value": "",
+											"description": "0 or 1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/upload-deck-slider",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"upload-deck-slider"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditDeckSlider",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Upload Deck edit 39",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckCategoryId",
+											"value": "1",
+											"description": "mandate",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deckSlides",
+											"description": "mandate",
+											"type": "file",
+											"src": [
+												"/D:/POC/sujit/liberatehealth-api-backend/uploads/logo.jpg",
+												"/D:/POC/sujit/liberatehealth-api-backend/uploads/profile.png"
+											],
+											"disabled": true
+										},
+										{
+											"key": "deckSlidesInfo",
+											"value": "[{\"id\": 181,\"viewOrder\":1,\"lock\":1},{\"viewOrder\":2,\"lock\":0},{\"viewOrder\":3,\"lock\":0}]",
+											"description": "mandate",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deckAttachments",
+											"description": "optional - PDF",
+											"type": "file",
+											"src": "/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.pdf",
+											"disabled": true
+										},
+										{
+											"key": "deckTags",
+											"value": "allergy,cancer,fever",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "newTags",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "Test desc 39 number slider",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "creator",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "locked",
+											"value": "1",
+											"description": "0 or 1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "lockCode",
+											"value": "",
+											"description": "mandate if locked = 1",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "organization",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "featured",
+											"value": "1",
+											"description": "0 or 1",
+											"type": "text"
+										},
+										{
+											"key": "id",
+											"value": "37",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "removedSlides",
+											"value": "182,183",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-deck-slider",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-deck-slider"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateDeckSlider",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "11,8",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-deck-slider",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-deck-slider"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewDeckVideo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "parent_category_id",
+											"value": "1",
+											"description": "Parent Category Id filter",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_records",
+											"value": "3",
+											"description": "Limit the records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "allergy",
+											"description": "Search string",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "name",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-deck-video",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-deck-video"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UploadDeckVideo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Upload Video Deck",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckCategoryId",
+											"value": "1",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckVideo",
+											"description": "mandate",
+											"type": "file",
+											"src": "/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.mp4"
+										},
+										{
+											"key": "deckTags",
+											"value": "allergy,cancer,fever",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "newTags",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "creator",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "organization",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										},
+										{
+											"key": "featured",
+											"value": "",
+											"description": "optional",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/upload-deck-video",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"upload-deck-video"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditDeckVideo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Test Upload Video Deck",
+											"description": "mandate",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deckCategoryId",
+											"value": "2",
+											"description": "mandate",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "deckVideo",
+											"description": "mandate",
+											"type": "file",
+											"src": "/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.mp4",
+											"disabled": true
+										},
+										{
+											"key": "deckTags",
+											"value": "allergy,cancer,fever,nishu",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "newTags",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "creator",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "organization",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "featured",
+											"value": "",
+											"description": "optional",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "id",
+											"value": "1",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deck_created",
+											"value": "Sun May 31 2020 19:34:52 GMT+0530 (India Standard Time)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-deck-video",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-deck-video"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateDeckVideo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "11,8",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-deck-video",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-deck-video"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ViewDeckAttachment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "parent_category_id",
+											"value": "1",
+											"description": "Parent Category Id filter",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_records",
+											"value": "3",
+											"description": "Limit the records",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "view_page",
+											"value": "1",
+											"description": "Page View",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "search_string",
+											"value": "pdf",
+											"description": "Search String",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_name",
+											"value": "name",
+											"description": "Sort by column name",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sort_col_type",
+											"value": "DESC",
+											"description": "Sort Order",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/view-deck-attachment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"view-deck-attachment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UploadDeckAttachment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "deckCategoryId",
+											"value": "1",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckAttachments",
+											"description": "mandate - PDF",
+											"type": "file",
+											"src": [
+												"/D:/POC/sujit/liberatehealth-api-backend/uploads/sample - Copy.pdf",
+												"/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.pdf"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/upload-deck-attachment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"upload-deck-attachment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditDeckAttachment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "deckCategoryId",
+											"value": "1",
+											"description": "mandate",
+											"type": "text"
+										},
+										{
+											"key": "deckAttachments",
+											"description": "mandate - PDF",
+											"type": "file",
+											"src": "/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.pdf"
+										},
+										{
+											"key": "id",
+											"value": "2",
+											"description": "mandate",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/edit-deck-attachment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"edit-deck-attachment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActivateDeactivateDeckAttachment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ids",
+											"value": "11,8",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/admin/activate-deactivate-deck-attachment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"activate-deactivate-deck-attachment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var Header = require('postman-collection').Header",
+							"pm.request.headers.add(new Header('jwt: ' + pm.collectionVariables.get(\"adminToken\")));",
+							"pm.request.headers.add(new Header('userid: ' + pm.collectionVariables.get(\"adminUserId\")));"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "ViewProfile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "6",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/view-profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"view-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditProfile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "5",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"description": "Password",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "security_question_id",
+									"value": "2",
+									"description": "Security Question I",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "security_answer",
+									"value": "CCA School",
+									"description": "Security Answer I",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "first_name",
+									"value": "Nishu",
+									"description": "First Name",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "last_name",
+									"value": "Dalal",
+									"description": "Last Name",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "mobile",
+									"value": "9898989865",
+									"description": "Mobile",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "country",
+									"value": "IN",
+									"description": "Country",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "Haryana",
+									"description": "State",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "Gurgaon",
+									"description": "City",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "zip_code",
+									"value": "122001",
+									"description": "Postal Code",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "area_of_practice_id",
+									"value": "1",
+									"description": "Area of Practice",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "profile_pic",
+									"description": "Profile Pic",
+									"type": "file",
+									"src": "/C:/Users/kunal/Downloads/pp.jpeg",
+									"disabled": true
+								},
+								{
+									"key": "subscribed",
+									"value": "false",
+									"description": "Subscribed or not",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "security_question_id_2",
+									"value": "2",
+									"description": "Security Question II",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "security_answer_2",
+									"value": "CCA",
+									"description": "Security Answer II",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "security_question_id_3",
+									"value": "1",
+									"description": "Security Question III",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "security_answer_3",
+									"value": "Delhi",
+									"description": "Security Answer III",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/edit-profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"edit-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ViewVisits",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "view_records",
+									"value": "10",
+									"description": "Limit the records",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "view_page",
+									"value": "1",
+									"description": "Page View",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "search_string",
+									"value": "123",
+									"description": "Search String",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_col_name",
+									"value": "last_name",
+									"description": "Sort by column name",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_col_type",
+									"value": "DESC",
+									"description": "Sort Order",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/view-visits",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"view-visits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteVisits",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ids",
+									"value": "1,2,3,4,5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/delete-visits",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"delete-visits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendSupportMail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "abc@test.in",
+									"type": "text"
+								},
+								{
+									"key": "subject",
+									"value": "Test Mail",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Testing",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/send-support-mail",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"send-support-mail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "current_password",
+									"value": "singh.anshuman001@gmail.com",
+									"description": "User's current password",
+									"type": "text"
+								},
+								{
+									"key": "new_password",
+									"value": "nishudalal50@gmail.com",
+									"description": "New password to be updated",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/change-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ActivateDeactivate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ids",
+									"value": "1,2,3",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/activate-deactivate-profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"activate-deactivate-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAccount",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}/user/delete-account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"delete-account"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var Header = require('postman-collection').Header",
+							"pm.request.headers.add(new Header('jwt: ' + pm.collectionVariables.get(\"patientToken\")));",
+							"pm.request.headers.add(new Header('userid: ' + pm.collectionVariables.get(\"patientUserId\")));"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Api",
+			"item": [
+				{
+					"name": "ViewHcpAops",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/view-hcp-aops",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"view-hcp-aops"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DecryptData",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "NDZkZTFkZGMzYjUxYTFmNDA1MzEwYmM3MGMzODNlNjc6ZmM2M2JmZGFjNGMxNWNiYjVlMWE1OTUzODIxMGU4MjliYTM1MzNhMmRiYWZkMDFkMjY1NTQzY2ZkM2Y2MmIxMA==",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/decrypt-data",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"decrypt-data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ViewSearchTags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/view-search-tags",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"view-search-tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ViewSecurityQuestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/view-security-questions",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"view-security-questions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clinician",
+			"item": [
+				{
+					"name": "ViewCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/view-categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"view-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ViewCategoryDecks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "view_type",
+									"value": "0",
+									"description": "0-available,1-user saved, 2-favorite, 3- un-locked",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/view-category-decks",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"view-category-decks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ViewCategoryAttachments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/view-category-attachments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"view-category-attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchContent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"value": "asthma",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/search-content",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"search-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendMailRaw",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "deck_data_id",
+									"value": "1",
+									"description": "either this or deck_data_user_id is mandatory",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "deck_data_video_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "deck_data_user_id",
+									"value": "12",
+									"description": "either this or deck_data_id is mandatory",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "nishudalal250@gmail.com",
+									"description": "mandatory",
+									"type": "text"
+								},
+								{
+									"key": "email_message",
+									"value": "Custom Message",
+									"description": "mandatory",
+									"type": "text"
+								},
+								{
+									"key": "nhs_number",
+									"value": "1234567899",
+									"description": "mandatory (10 digit numbers no letters), also to be shown like XXX-XXX-XXXX in the front-end",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "Sun May 31 2020 19:34:52 GMT+0530 (India Standard Time)",
+									"description": "mandate",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Nishu Saved Saturday",
+									"type": "text"
+								},
+								{
+									"key": "attachments",
+									"description": "optional - attachments from device",
+									"type": "file",
+									"src": [
+										"/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.pdf",
+										"/D:/POC/sujit/liberatehealth-api-backend/uploads/slide-one.png"
+									]
+								},
+								{
+									"key": "selectedAttachments",
+									"value": "1",
+									"description": "optional - attachments from the choose screen",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/send-mail-raw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"send-mail-raw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TeachDeck",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "deck_data_id",
+									"value": "1",
+									"description": "mandate",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "nishudalal250@gmail.com",
+									"description": "mandate when actionType - 1",
+									"type": "text"
+								},
+								{
+									"key": "deckSlides",
+									"description": "mandate",
+									"type": "file",
+									"src": [
+										"/D:/POC/sujit/liberatehealth-api-backend/uploads/slide-four.png",
+										"/D:/POC/sujit/liberatehealth-api-backend/uploads/slide-one.png",
+										"/D:/POC/sujit/liberatehealth-api-backend/uploads/slide-three.png"
+									]
+								},
+								{
+									"key": "actionType",
+									"value": "4",
+									"description": "1-email, 2-save this deck, 3-save this deck as video, 4-save this deck and video both",
+									"type": "text"
+								},
+								{
+									"key": "nhs_number",
+									"value": "1234567895",
+									"description": "mandate when actionType - 1",
+									"type": "text"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "Sun May 31 2020 19:34:52 GMT+0530 (India Standard Time)",
+									"description": "mandate when actionType - 1",
+									"type": "text"
+								},
+								{
+									"key": "email_message",
+									"value": "Custom Message",
+									"description": "mandate when actionType - 1",
+									"type": "text"
+								},
+								{
+									"key": "teachingRecorded",
+									"description": "mandate",
+									"type": "file",
+									"src": "/D:/POC/sujit/liberatehealth-api-backend/uploads/sample.mp4"
+								},
+								{
+									"key": "name",
+									"value": "Custom Teaching Msg",
+									"type": "text"
+								},
+								{
+									"key": "attachments",
+									"description": "optional - attachments from device",
+									"type": "file",
+									"src": [
+										"/C:/Users/kunal/Downloads/slider3.jpg",
+										"/C:/Users/kunal/Downloads/Webp.net-resizeimage (1).png",
+										"/C:/Users/kunal/Downloads/Springer Ebooks.pdf"
+									]
+								},
+								{
+									"key": "selectedAttachments",
+									"value": "1,2",
+									"description": "optional - attachments from the choose screen",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/teach-deck",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"teach-deck"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNhsDobNumber",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "nd.nishu@hotmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/get-patient-nhs-dob",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"get-patient-nhs-dob"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UnlockContent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "unlockCode",
+									"value": "E41N6P0V",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/unlock-content",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"unlock-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MarkFavoriteContent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "deck_data_video_id",
+									"value": "3",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "deck_data_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "deck_data_user_id",
+									"value": "14",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/mark-favorite-content",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"mark-favorite-content"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var Header = require('postman-collection').Header",
+							"pm.request.headers.add(new Header('jwt: ' + pm.collectionVariables.get(\"clinicianToken\")));",
+							"pm.request.headers.add(new Header('userid: ' + pm.collectionVariables.get(\"clinicianUserId\")));",
+							"pm.request.headers.add(new Header('orgid: ' + pm.collectionVariables.get(\"clinicianOrgId\")));"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://devliberate.tk/nodeapi"
+		},
+		{
+			"key": "local",
+			"value": "localhost:8080"
+		},
+		{
+			"key": "adminToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNpbmdoLmFuc2h1bWFuMDAxQGdtYWlsLmNvbSIsInJvbGUiOjEsInVzZXJJZCI6MSwiaWF0IjoxNjEyNDI5NDMyLCJleHAiOjE2MTM2MzkwMzIsImF1ZCI6IkF1dGhUb2tlbiIsImlzcyI6IkFQSSIsInN1YiI6InJvb3QifQ.oB4_34BI-1UCbPtu-oUXcKlY4BCAq9p9DqCFZWdJws8"
+		},
+		{
+			"key": "adminUserId",
+			"value": "1"
+		},
+		{
+			"key": "patientToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pc2h1ZGFsYWw1MEBnbWFpbC5jb20iLCJyb2xlIjo0LCJ1c2VySWQiOjEsImlhdCI6MTYxMjQ1ODk1NywiZXhwIjoxNjEzNjY4NTU3LCJhdWQiOiJBdXRoVG9rZW4iLCJpc3MiOiJBUEkiLCJzdWIiOiJjbGluaWNpYW4ifQ.2l2IEUmS5yNW472ArPHpL5YaexP0_Ygq_wvb5eR3u2s"
+		},
+		{
+			"key": "patientUserId",
+			"value": "1"
+		},
+		{
+			"key": "clinicianToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNpbmdoLmFuc2h1bWFuQGhvdG1haWwuY29tIiwicm9sZSI6MywidXNlcklkIjoyLCJpYXQiOjE2MTI0NjAwMjYsImV4cCI6MTYxMzY2OTYyNiwiYXVkIjoiQXV0aFRva2VuIiwiaXNzIjoiQVBJIiwic3ViIjoiY2xpbmljaWFuIn0.Mm8bkUCnw0LfNbdXYYUMuae7EcDTaeWIXcizEtVLVDE"
+		},
+		{
+			"key": "clinicianUserId",
+			"value": "2"
+		},
+		{
+			"key": "clinicianOrgId",
+			"value": "1"
+		}
+	]
+}

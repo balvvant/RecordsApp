@@ -1,0 +1,2581 @@
+swagger: "2.0"
+info:
+  description: |
+    This is the API Documentation for the LiberatePro Project
+  version: 1.0.0
+  title: Liberate Pro
+  termsOfService: https://devliberate.tk
+  contact:
+    email: dalal.nishu@icycastle.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: devliberate.tk
+basePath: /nodeapi
+tags:
+- name: Auth Routes
+  description: Authentication Routes
+- name: User Routes
+  description: APIs to manage the common-user-level activities
+- name: Public Routes
+  description: APIs to manage the common-public-level activities
+- name: Admin Routes
+  description: APIs to manage the admin-level activities
+- name: Patient Routes
+  description: APIs to manage the patient-level activities
+- name: Clinician Routes
+  description: APIs to manage the clinician-level activities
+schemes:
+- https
+paths:
+  /auth/login:
+    post:
+      tags:
+      - Auth Routes
+      summary: This service will be used to both login and activate the user
+      operationId: loginActivateUser
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: Password of the user, required when logging in
+        required: false
+        type: string
+      - name: activationCode
+        in: formData
+        description: Activation Code of the user, required when activating user
+        required: false
+        type: string
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /auth/check-reset:
+    post:
+      tags:
+      - Auth Routes
+      summary: This service will be used to validate the email to allow the reset options by email or security questions
+      operationId: checkResetPassword
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /auth/gen-reset:
+    post:
+      tags:
+      - Auth Routes
+      summary: This service will be used to generate the reset token for the user to reset the password
+      operationId: genResetPasswordToken
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: email
+        in: formData
+        description: Email of the user
+        required: true
+        type: string
+      - name: question_id
+        in: formData
+        description: Security Question Id being answered - required when resetting password by answering security answer
+        required: false
+        type: string
+      - name: security_answer
+        in: formData
+        description: Security Question Answer - required when resetting password by answering security answer
+        required: false
+        type: string
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /auth/get-reset:
+    post:
+      tags:
+      - Auth Routes
+      summary: This service will be used to validate the reset token from the client informing whether to allow to reset the password or not
+      operationId: getResetPasswordToken
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: token
+        in: formData
+        description: Password Reset Token
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /auth/post-reset:
+    post:
+      tags:
+      - Auth Routes
+      summary: This service will be used to reset the password against the reset token which is linked to the user requesting the same
+      operationId: postResetPassword
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: token
+        in: formData
+        description: Password Reset Token against which password is to be updated
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: New Password
+        required: true
+        type: string
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/invite-user:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to invite the users (admins, clinicians or patients)
+      operationId: adminInviteUser
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: email
+        in: formData
+        description: Email of the user to be invited to the platform
+        required: true
+        type: string
+      - name: activation_code
+        in: formData
+        description: Activation code from client
+        required: false
+        type: string
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/resend-invite-user:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to resend the invite to the users (admins, clinicians or patients)
+      operationId: adminResendInviteUser
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: Id of the user invited to the platform
+        required: true
+        type: integer
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-users:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the users (admins, clinicians or patients)
+      operationId: adminViewUsers
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the users to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View of the users
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String of the users
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      - name: role
+        in: formData
+        description: RoleId of the user (1 or 2 for admin, 3 for clinician, 4 for patient)
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-hcp:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the hcps
+      operationId: adminViewHcps
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-aop:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the aops
+      operationId: adminViewAops
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-hcp:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate HCPs
+      operationId: adminActivateDeactivateHcp
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-aop:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate AOPs
+      operationId: adminActivateDeactivateAop
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-hcp:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to add or edit HCPs
+      operationId: adminAddEditHcp
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: Id of the HCP to be updated (required when need to updated, else new will be added)
+        required: false
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the record to be added or updated if id is passed
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-aop:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to add or edit AOPs
+      operationId: adminAddEditAop
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: Id of the HCP to be updated (required when need to updated, else new will be added)
+        required: false
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the record to be added or updated if id is passed
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/map-user-orgs:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to update the mapping between users and organizations
+      operationId: adminMapUserOrg
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: Id of the user to be mapped
+        required: true
+        type: integer
+      - name: orgIds
+        in: formData
+        description: Organization Ids to be mapped
+        required: false
+        type: string
+      - name: removedOrgIds
+        in: formData
+        description: Organization Ids to be un-mapped
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/add-organization:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to on-board the organization
+      operationId: adminAddOrganization
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the organization
+        required: true
+        type: string
+      - name: address
+        in: formData
+        description: Address of the organization
+        required: true
+        type: string
+      - name: copyright_text
+        in: formData
+        description: Copyright Text of the organization
+        required: true
+        type: string
+      - name: country
+        in: formData
+        description: Country of the organization
+        required: true
+        type: string
+      - name: state
+        in: formData
+        description: State of the organization
+        required: true
+        type: string
+      - name: zip_code
+        in: formData
+        description: Postal Code of the organization
+        required: true
+        type: string
+      - name: city
+        in: formData
+        description: City of the organization
+        required: true
+        type: string
+      - name: additional_address
+        in: formData
+        description: Additional Address of the organization
+        required: false
+        type: string
+      - name: brand_logo
+        in: formData
+        description: Brand Logo of the organization
+        required: true
+        type: file
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-organization:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to updated the existing organization
+      operationId: adminEditOrganization
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: Id of the organization
+        required: true
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the organization
+        required: true
+        type: string
+      - name: address
+        in: formData
+        description: Address of the organization
+        required: true
+        type: string
+      - name: copyright_text
+        in: formData
+        description: Copyright Text of the organization
+        required: true
+        type: string
+      - name: country
+        in: formData
+        description: Country of the organization
+        required: true
+        type: string
+      - name: state
+        in: formData
+        description: State of the organization
+        required: true
+        type: string
+      - name: zip_code
+        in: formData
+        description: Postal Code of the organization
+        required: true
+        type: string
+      - name: city
+        in: formData
+        description: City of the organization
+        required: true
+        type: string
+      - name: additional_address
+        in: formData
+        description: Additional Address of the organization
+        required: false
+        type: string
+      - name: brand_logo
+        in: formData
+        description: Brand Logo of the organization
+        required: true
+        type: file
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-organizations:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the organizations
+      operationId: adminViewOrgs
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/map-cat-orgs:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to update the mapping between categories and organizations
+      operationId: adminMapCatOrg
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: organization_id
+        in: formData
+        description: Id of the organization to be mapped
+        required: true
+        type: integer
+      - name: catIds
+        in: formData
+        description: Category Ids to be mapped
+        required: false
+        type: string
+      - name: removedCatIds
+        in: formData
+        description: Category Ids to be un-mapped
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-organization:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate Organizations
+      operationId: adminActivateDeactivateOrgs
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-categories:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the categories
+      operationId: adminViewCats
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: parent_category_id
+        in: formData
+        description: Categories filtered by parent category id
+        required: false
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-parent-categories:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the parent categories
+      operationId: adminViewParentCats
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-category:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to updated the existing category
+      operationId: adminEditCategory
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: category_id
+        in: formData
+        description: Category Id to be updated
+        required: true
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the category
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/add-category:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to add new category
+      operationId: adminAddCategory
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: parent_category_id
+        in: formData
+        description: Parent Category Id of this new category
+        required: true
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the category
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-category:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate categories
+      operationId: adminActivateDeactivateCats
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-deck-slider:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the Deck Sliders
+      operationId: adminViewDeckSlider
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: parent_category_id
+        in: formData
+        description: Parent Category Id filter
+        required: false
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/upload-deck-slider:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to add the new Deck Slider
+      operationId: adminAddDeckSlider
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the deck
+        required: true
+        type: string
+      - name: deckCategoryId
+        in: formData
+        description: Category Id of the deck
+        required: true
+        type: string
+      - name: deckSlides
+        in: formData
+        description: Deck Slides
+        required: true
+        type: file
+      - name: deckSlidesInfo
+        in: formData
+        description: Deck Slides Info in stringified JSON format for view order and whether locked or not like this, < [{"viewOrder":1,"lock":1},{"viewOrder":2,"lock":0},{"viewOrder":3,"lock":0}] >
+        required: true
+        type: string
+      - name: deckAttachments
+        in: formData
+        description: Deck Attachments
+        required: false
+        type: file
+      - name: deckTags
+        in: formData
+        description: Comma-Separated list of the tags
+        required: false
+        type: string
+      - name: newTags
+        in: formData
+        description: New Tags to be added to the auto-suggest list
+        required: true
+        type: string
+      - name: description
+        in: formData
+        description: Deck Description
+        required: false
+        type: string
+      - name: creator
+        in: formData
+        description: Deck Author
+        required: false
+        type: string
+      - name: locked
+        in: formData
+        description: Deck Lock Status (o - unlocked, 1 - locked)
+        required: false
+        type: integer
+      - name: lockCode
+        in: formData
+        description: Deck Lock Code if lock status is 1
+        required: false
+        type: string
+      - name: organization
+        in: formData
+        description: Deck Organization
+        required: false
+        type: string
+      - name: featured
+        in: formData
+        description: Deck Featured or not ( 0 - not, 1 - yes )
+        required: false
+        type: string
+      - name: deck_created
+        in: formData
+        description: Deck Created Date
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-deck-slider:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to updated the existing Deck Slider
+      operationId: adminEditDeckSlider
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: id
+        in: formData
+        description: Id of the deck being updated
+        required: true
+        type: integer
+      - name: name
+        in: formData
+        description: Name of the deck
+        required: true
+        type: string
+      - name: deckCategoryId
+        in: formData
+        description: Category Id of the deck
+        required: true
+        type: string
+      - name: deckSlides
+        in: formData
+        description: Deck Slides
+        required: true
+        type: file
+      - name: deckSlidesInfo
+        in: formData
+        description: Deck Slides Info in stringified JSON format for view order and whether locked or not like this, < [{"viewOrder":1,"lock":1},{"viewOrder":2,"lock":0},{"viewOrder":3,"lock":0}] >
+        required: true
+        type: string
+      - name: deckAttachments
+        in: formData
+        description: Deck Attachments
+        required: false
+        type: file
+      - name: deckTags
+        in: formData
+        description: Comma-Separated list of the tags
+        required: false
+        type: string
+      - name: newTags
+        in: formData
+        description: New Tags to be added to the auto-suggest list
+        required: true
+        type: string
+      - name: description
+        in: formData
+        description: Deck Description
+        required: false
+        type: string
+      - name: creator
+        in: formData
+        description: Deck Author
+        required: false
+        type: string
+      - name: locked
+        in: formData
+        description: Deck Lock Status (o - unlocked, 1 - locked)
+        required: false
+        type: integer
+      - name: lockCode
+        in: formData
+        description: Deck Lock Code if lock status is 1
+        required: false
+        type: string
+      - name: organization
+        in: formData
+        description: Deck Organization
+        required: false
+        type: string
+      - name: featured
+        in: formData
+        description: Deck Featured or not ( 0 - not, 1 - yes )
+        required: false
+        type: string
+      - name: removedSlides
+        in: formData
+        description: Id of the slides removed from the deck
+        required: false
+        type: string
+      - name: deck_created
+        in: formData
+        description: Deck Created Date
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-deck-slider:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate deck slider
+      operationId: adminActivateDeactivateDeckSlider
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-deck-video:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the Deck Videos
+      operationId: adminViewDeckVideo
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: parent_category_id
+        in: formData
+        description: Parent Category Id filter
+        required: false
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/upload-deck-video:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to add the new Deck Video
+      operationId: adminAddDeckVideo
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the deck
+        required: true
+        type: string
+      - name: deckCategoryId
+        in: formData
+        description: Category Id of the deck
+        required: true
+        type: string
+      - name: deckVideo
+        in: formData
+        description: Deck Video
+        required: true
+        type: file
+      - name: deckTags
+        in: formData
+        description: Comma-Separated list of the tags
+        required: false
+        type: string
+      - name: newTags
+        in: formData
+        description: New Tags to be added to the auto-suggest list
+        required: true
+        type: string
+      - name: description
+        in: formData
+        description: Deck Video Description
+        required: false
+        type: string
+      - name: creator
+        in: formData
+        description: Deck Video Author
+        required: false
+        type: string
+      - name: locked
+        in: formData
+        description: Deck Video Lock Status (o - unlocked, 1 - locked)
+        required: false
+        type: integer
+      - name: lockCode
+        in: formData
+        description: Deck Video Lock Code if lock status is 1
+        required: false
+        type: string
+      - name: organization
+        in: formData
+        description: Deck Video Organization
+        required: false
+        type: string
+      - name: featured
+        in: formData
+        description: Deck Video Featured or not ( 0 - not, 1 - yes )
+        required: false
+        type: string
+      - name: deck_created
+        in: formData
+        description: Deck Video Created Date
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-deck-video:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to update the existing Deck Video
+      operationId: adminEditDeckVideo
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: id
+        in: formData
+        description: Id of the deck video record
+        required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the deck
+        required: true
+        type: string
+      - name: deckCategoryId
+        in: formData
+        description: Category Id of the deck
+        required: true
+        type: string
+      - name: deckVideo
+        in: formData
+        description: Deck Video
+        required: true
+        type: file
+      - name: deckTags
+        in: formData
+        description: Comma-Separated list of the tags
+        required: false
+        type: string
+      - name: newTags
+        in: formData
+        description: New Tags to be added to the auto-suggest list
+        required: true
+        type: string
+      - name: description
+        in: formData
+        description: Deck Video Description
+        required: false
+        type: string
+      - name: creator
+        in: formData
+        description: Deck Video Author
+        required: false
+        type: string
+      - name: locked
+        in: formData
+        description: Deck Video Lock Status (o - unlocked, 1 - locked)
+        required: false
+        type: integer
+      - name: lockCode
+        in: formData
+        description: Deck Video Lock Code if lock status is 1
+        required: false
+        type: string
+      - name: organization
+        in: formData
+        description: Deck Video Organization
+        required: false
+        type: string
+      - name: featured
+        in: formData
+        description: Deck Video Featured or not ( 0 - not, 1 - yes )
+        required: false
+        type: string
+      - name: deck_created
+        in: formData
+        description: Deck Video Created Date
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-deck-video:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate deck video
+      operationId: adminActivateDeactivateDeckVideo
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/view-deck-attachment:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to view the list of the Deck Attachments
+      operationId: adminViewDeckAttachments
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: parent_category_id
+        in: formData
+        description: Parent Category Id filter
+        required: false
+        type: integer
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/upload-deck-attachment:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to add the new Deck Attachment
+      operationId: adminAddDeckAttachment
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: deckCategoryId
+        in: formData
+        description: Category Id of the deck
+        required: true
+        type: string
+      - name: deckAttachments
+        in: formData
+        description: Deck Attachments
+        required: true
+        type: file
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/edit-deck-attachment:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to update the existing Deck Attachment
+      operationId: adminEditDeckAttachment
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: string
+      - name: id
+        in: formData
+        description: Id of the deck attachment
+        required: true
+        type: string
+      - name: deckCategoryId
+        in: formData
+        description: Category Id of the deck
+        required: true
+        type: string
+      - name: deckAttachments
+        in: formData
+        description: Deck Attachments
+        required: true
+        type: file
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /admin/activate-deactivate-deck-attachment:
+    post:
+      tags:
+      - Admin Routes
+      summary: This service will be used to activate or deactivate deck attachment
+      operationId: adminActivateDeactivateDeckAttachment
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the admin
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the admin
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/activate-deactivate-profile:
+    post:
+      tags:
+      - User Routes
+      summary: This service will be used to activate or deactivate the user profile
+      operationId: userActivateDeactivateProfile
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate only if token is of the admin
+        required: true
+        type: string
+      - name: status
+        in: formData
+        description: 1 - activate or 0 - deactivate
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/delete-account:
+    post:
+      tags:
+      - User Routes
+      summary: This service will be used to delete the user account permanently
+      operationId: userDeleteAccount
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/view-profile:
+    post:
+      tags:
+      - User Routes
+      summary: This service will be used to view the user profile
+      operationId: userViewProfile
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: User ID - considered only when token is related to admin
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/edit-profile:
+    post:
+      tags:
+      - User Routes
+      summary: This service will be used to edit the user profile
+      operationId: userEditProfile
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      - name: id
+        in: formData
+        description: User ID - considered only when token is related to admin
+        required: false
+        type: integer
+      - name: password
+        in: formData
+        description: Password of the user
+        required: false
+        type: string
+      - name: security_question_id
+        in: formData
+        description: Id of the security question - I chosen
+        required: true
+        type: integer
+      - name: security_question_id_2
+        in: formData
+        description: Id of the security question - II chosen
+        required: true
+        type: integer
+      - name: security_question_id_3
+        in: formData
+        description: Id of the security question - III chosen
+        required: true
+        type: integer
+      - name: security_answer
+        in: formData
+        description: Security Question - I Answer
+        required: true
+        type: string
+      - name: security_answer_2
+        in: formData
+        description: Security Question - II Answer
+        required: true
+        type: string
+      - name: security_answer_3
+        in: formData
+        description: Security Question - III Answer
+        required: true
+        type: string
+      - name: first_name
+        in: formData
+        description: First Name
+        required: true
+        type: string
+      - name: last_name
+        in: formData
+        description: Last Name
+        required: true
+        type: string
+      - name: mobile
+        in: formData
+        description: Mobile Number
+        required: true
+        type: string
+      - name: country
+        in: formData
+        description: Country
+        required: true
+        type: string
+      - name: state
+        in: formData
+        description: State
+        required: true
+        type: string
+      - name: city
+        in: formData
+        description: City
+        required: true
+        type: string
+      - name: zip_code
+        in: formData
+        description: Postal Code
+        required: true
+        type: string
+      - name: area_of_practice_id
+        in: formData
+        description: Id of the selected AOP
+        required: true
+        type: string
+      - name: subscribed
+        in: formData
+        description: If user is subscribed or not
+        required: true
+        type: boolean
+      - name: profile_pic
+        in: formData
+        description: Profile Pic of the user
+        required: false
+        type: file
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/view-visits:
+    post:
+      tags:
+      - Patient Routes
+      summary: This service will be used to view the list of the Patient Visits
+      operationId: patientViewVisits
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: string
+      - name: view_records
+        in: formData
+        description: Number of the records to return
+        required: false
+        type: integer
+      - name: view_page
+        in: formData
+        description: Page View
+        required: false
+        type: integer
+      - name: search_string
+        in: formData
+        description: Search String
+        required: false
+        type: string
+      - name: sort_col_name
+        in: formData
+        description: Sort by column name
+        required: false
+        type: string
+      - name: sort_col_type
+        in: formData
+        description: Sort Order (ASC or DESC)
+        required: false
+        type: string
+      - name: deleted
+        in: formData
+        description: Return the deleted records (pass value as 1)
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/delete-visits:
+    post:
+      tags:
+      - Patient Routes
+      summary: This service will be used to delete the patient visits
+      operationId: patientDeleteVisits
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      - name: ids
+        in: formData
+        description: Comma-Separated string of ids of records to deactivate or activate
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/send-support-mail:
+    post:
+      tags:
+      - Patient Routes
+      summary: This service will be used to send the support mails
+      operationId: patientSendSupportMails
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      - name: email
+        in: formData
+        description: Email of the patient to use while sending support mail
+        required: true
+        type: string
+      - name: subject
+        in: formData
+        description: Subject of the support mail
+        required: true
+        type: string
+      - name: message
+        in: formData
+        description: Message of the support mail
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/change-password:
+    post:
+      tags:
+      - User Routes
+      summary: This service will be used to update the user password
+      operationId: userChangePassword
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the user
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the user
+        required: true
+        type: integer
+      - name: current_password
+        in: formData
+        description: Current User Password
+        required: true
+        type: string
+      - name: new_password
+        in: formData
+        description: New Password to be updated to the user
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /api/view-hcp-aops:
+    get:
+      tags:
+      - Public Routes
+      summary: This service will be used to view the HCP and AOP list
+      operationId: apiViewHcpAopList
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /api/view-search-tags:
+    get:
+      tags:
+      - Public Routes
+      summary: This service will be used to view the search tags list
+      operationId: apiViewSearchTags
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /api/view-security-questions:
+    get:
+      tags:
+      - Public Routes
+      summary: This service will be used to view the security questions list
+      operationId: apiViewSecurityQuestions
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/view-categories:
+    get:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to view the categories list
+      operationId: clinicianViewCategories
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/view-category-decks:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to view the list of the category decks and videos
+      operationId: clinicianViewCategoryDecks
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: category_id
+        in: formData
+        description: Category Id filter
+        required: true
+        type: integer
+      - name: view_type
+        in: formData
+        description: Select the view folder ( 0 - available, 1 - user saved, 2 - favorite, 3 - unlocked )
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/view-category-attachments:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to view the list of the category deck attachments
+      operationId: clinicianViewCategoryAttachments
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: category_id
+        in: formData
+        description: Category Id filter
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/send-mail-raw:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to send the raw deck or video in the mail
+      operationId: clinicianSendRawMail
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: deck_data_id
+        in: formData
+        description: Deck Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: integer
+      - name: deck_data_video_id
+        in: formData
+        description: Deck Video Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: integer
+      - name: deck_data_user_id
+        in: formData
+        description: Saved User Deck Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: integer
+      - name: email
+        in: formData
+        description: Email of the patient to send the mail
+        required: true
+        type: string
+      - name: email_message
+        in: formData
+        description: Email message to send to the patient
+        required: true
+        type: string
+      - name: nhs_number
+        in: formData
+        description: NHS Number of the patient
+        required: true
+        type: string
+      - name: date_of_birth
+        in: formData
+        description: Date of birth of the patient
+        required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the content
+        required: true
+        type: string
+      - name: attachments
+        in: formData
+        description: Attachment from the device
+        required: false
+        type: file
+      - name: selectedAttachments
+        in: formData
+        description: Selected attachments by the clinician from the available ones
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/teach-deck:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to send the taught deck in the mail
+      operationId: clinicianTeachDeck
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: deck_data_id
+        in: formData
+        description: Deck Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: integer
+      - name: deckSlides
+        in: formData
+        description: Deck Slides
+        required: true
+        type: file
+      - name: actionType
+        in: formData
+        description: Action Type (1-email, 2-save this deck, 3-save this deck as video, 4-save this deck and video both)
+        required: true
+        type: integer
+      - name: teachingRecorded
+        in: formData
+        description: Teaching Recorded File
+        required: true
+        type: file
+      - name: email
+        in: formData
+        description: Email of the patient to send the mail
+        required: true
+        type: string
+      - name: email_message
+        in: formData
+        description: Email message to send to the patient
+        required: true
+        type: string
+      - name: nhs_number
+        in: formData
+        description: NHS Number of the patient
+        required: true
+        type: string
+      - name: date_of_birth
+        in: formData
+        description: Date of birth of the patient
+        required: true
+        type: string
+      - name: name
+        in: formData
+        description: Name of the content
+        required: true
+        type: string
+      - name: attachments
+        in: formData
+        description: Attachment from the device
+        required: false
+        type: file
+      - name: selectedAttachments
+        in: formData
+        description: Selected attachments by the clinician from the available ones
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/get-patient-nhs-dob:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to get the patient NHS D.O.B.
+      operationId: clinicianPatientNhsDob
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: email
+        in: formData
+        description: Email of the patient
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/unlock-content:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to unlock the locked content
+      operationId: clinicianUnlockContent
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: unlockCode
+        in: formData
+        description: Unlock Code
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+  /user/mark-favorite-content:
+    post:
+      tags:
+      - Clinician Routes
+      summary: This service will be used to mark the content as favorite or not
+      operationId: clinicianMarkFavoriteContent
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: jwt
+        in: header
+        description: Auth Token of the clinician
+        required: true
+        type: string
+      - name: userid
+        in: header
+        description: UserId of the clinician
+        required: true
+        type: integer
+      - name: orgid
+        in: header
+        description: OrgId selected by the clinician
+        required: true
+        type: integer
+      - name: deck_data_id
+        in: formData
+        description: Deck Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: string
+      - name: deck_data_user_id
+        in: formData
+        description: Saved Deck User Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: string
+      - name: deck_data_video_id
+        in: formData
+        description: Deck Video Id (Either deck_data_id or deck_data_video_id or deck_data_user_id is required)
+        required: false
+        type: string
+      responses:
+        "200":
+          description: '#/definitions/ApiResponse'
+definitions:
+  ApiResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      data:
+        type: object
+        properties: {}
+      message:
+        type: string
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io

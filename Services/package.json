@@ -1,0 +1,73 @@
+{
+  "name": "liberate-backend",
+  "version": "1.0.0",
+  "description": "Liberate Health Backend API project",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node app.js",
+    "prod": "npm i && pm2 kill && pm2 start ecosystem.config.js --only liberate",
+    "dev": "npm i && pm2 kill && pm2 start ecosystem.config.js --only liberate",
+    "stop": "pm2 kill"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/icycastle/liberate-backend.git"
+  },
+  "keywords": [
+    "Liberate",
+    "NodeJs",
+    "Backend",
+    "REST",
+    "API"
+  ],
+  "author": "IcyCastle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/icycastle/liberate-backend.git/issues"
+  },
+  "homepage": "https://gitlab.com/icycastle/liberate-backend.git#readme",
+  "dependencies": {
+    "@types/node": "^13.13.2",
+    "app-root-path": "^3.0.0",
+    "aws-sdk": "^2.674.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "countrycitystatejson": "^0.2.16",
+    "csurf": "^1.9.0",
+    "excel4node": "^1.7.2",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.7-alpha.3",
+    "ffmpeg": "0.0.4",
+    "file-type": "^14.3.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs-path": "0.0.24",
+    "generate-password": "^1.5.1",
+    "handbrake-js": "^5.0.0",
+    "helmet": "^3.16.0",
+    "http-status-codes": "^1.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "maskdata": "^1.1.6",
+    "moment": "^2.26.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^1.6.5",
+    "nodemailer": "^6.0.0",
+    "nodemailer-sendgrid-transport": "^0.2.0",
+    "pdfkit": "^0.11.0",
+    "pug": "^3.0.0",
+    "read-excel-file": "^4.0.6",
+    "replace-string": "^3.1.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "sequelize": "^5.21.6",
+    "uuid": "^3.3.2",
+    "xlsx-to-json-lc": "^0.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.3.2",
+    "nodemon": "^1.18.10"
+  }
+}
