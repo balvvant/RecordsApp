@@ -1,11 +1,110 @@
 const COMMON_CONTROLLER = require('./CommonController');
 const CONSTANTS = require("../utils/Constants");
+const SINGLE_VALUE_CONSTANTS = require("../utils/SingleValueConstants");
 const STATUS_CODES = CONSTANTS.STATUS_CODES;
 const UTILITIES_LIB = require("../utils/utilities");
 const LOGGER = require("../utils/logger");
 const My_SQL = require("../config/database/sql");
 const { UserModel } = require('../models/UserModel');
 const { Roles } = require('../utils/Constants');
+
+async function GetBuyerData(dataObject){
+    let myQuery= await My_SQL.runQuery(`SELECT COUNT(RecordID) AS Records FROM UserRecords 
+    WHERE ModifiedByID= ${res.locals.userID} AND RecordStatus ='${CONSTANTS.RecordStatues.SOLD}`);
+    if (myQuery && myQuery.error == 0) {
+        if(myQuery.data){
+            //total records bought
+            dataObject.Result1= myQuery.data[0].Records;
+        }
+        myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Earnings  
+        FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'`);
+        if (myQuery && myQuery.error == 0) {
+            if(myQuery.data){
+                //total Recharge or credit    
+                dataObject.Result2= myQuery.data[0].Earnings;
+            }
+            myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Expenses  
+            FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}'`);
+            if (myQuery && myQuery.error == 0) {
+                if(myQuery.data){
+                    //total expenses or debit    
+                    dataObject.Result3= myQuery.data[0].Expenses;
+                    //total available balance
+                    dataObject.Result4= dataObject.Result2- dataObject.Result3 ;
+                }
+                dataObject.statusCode= STATUS_CODES.OK;
+            }  
+        }    
+    }
+    return dataObject;
+} 
+
+async function GetSellerData(dataObject){
+    let myQuery= await My_SQL.runQuery(`SELECT COUNT(RecordID) AS Records FROM UserRecords 
+            WHERE CreatedByID= ${res.locals.userID}`);
+    if (myQuery && myQuery.error == 0) {
+        if(myQuery.data){
+            //total records uploaded
+            dataObject.Result1= myQuery.data[0].Records;
+        }
+        myQuery= await My_SQL.runQuery(`SELECT COUNT(RecordID) AS Records FROM UserRecords 
+            WHERE CreatedByID= ${res.locals.userID} AND RecordStatus ='${CONSTANTS.RecordStatues.SOLD}`);
+        if (myQuery && myQuery.error == 0) {
+            if(myQuery.data){
+                //total records Sold
+                dataObject.Result2= myQuery.data[0].Records;
+            }    
+            myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Earnings  
+            FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'`);
+            if (myQuery && myQuery.error == 0) {
+                if(myQuery.data){
+                    //total earnings or credit    
+                    dataObject.Result3= myQuery.data[0].Earnings;
+                }
+                myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Expenses  
+                FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}'`);
+                if (myQuery && myQuery.error == 0) {
+                    if(myQuery.data){
+                        //total expenses or debit    
+                        dataObject.Result4= myQuery.data[0].Expenses;
+                        //total available balance
+                        dataObject.Result5= dataObject.Result3- dataObject.Result2;
+                    }
+                    dataObject.statusCode= STATUS_CODES.OK;
+                }  
+            }
+        }    
+    }
+    return dataObject;
+} 
+
+async function GetAdminData(dataObject){
+    let myQuery= await My_SQL.runQuery(`SELECT COUNT(UserID) AS Records FROM Users 
+            WHERE UserRole= ${CONSTANTS.roleId.Buyer} AND IsActive = ${CONSTANTS.Status.Active_Status}`);
+    if (myQuery && myQuery.error == 0) {
+        if(myQuery.data){
+            //total buyers
+            dataObject.Result1= myQuery.data[0].Records;
+        }
+        myQuery= await My_SQL.runQuery(`SELECT COUNT(UserID) AS Records FROM Users 
+            WHERE UserRole= ${CONSTANTS.roleId.Seller} AND IsActive = ${CONSTANTS.Status.Active_Status}`);
+        if (myQuery && myQuery.error == 0) {
+            if(myQuery.data){
+                //Total sellers
+                dataObject.Result2= myQuery.data[0].Records;
+            }    
+            myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Earnings  
+            FROM UserPayments WHERE ToUserID= ${SINGLE_VALUE_CONSTANTS.RootUserId} AND PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'`);
+            if (myQuery && myQuery.error == 0) {
+                if(myQuery.data){
+                    //total earnings or credit    
+                    dataObject.Result3= myQuery.data[0].Earnings;
+                } 
+            }
+        }    
+    }
+    return dataObject;
+} 
 
 const GetUsers = async(req, res, next) => {
     try {
@@ -177,82 +276,26 @@ const GetUserDashboard = async(req, res, next) => {
         let dataObject = {
             statusCode: STATUS_CODES.DATA_RETRIEVAL_ERROR
         }
-        let myQuery;
         if(res.locals.roleId === Roles.SuperAdmin){
-            //no of buyers
-            myQuery= wait My_SQL.runQuery(`SELECT A.UserID, A.UserName, B.role_name, A.EmailID, A.BTCAddress, A.JabberID, A.TelegramID, 
-                A.ActivationStatus, SUM(C.PaymentAmount) AS Earnings, SUM(D.PaymentAmount) AS Expenses  
-                FROM users A 
-                    INNER JOIN roles B ON A.UserRole = B.role_id
-                    INNER JOIN UserPayments C ON A.UserID= C.ToUserID AND C.PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'
-                    INNER JOIN UserPayments D ON A.UserID= D.ToUserID AND D.PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}' 
-                GROUP BY A.UserID
-                ORDER BY A.UserID`);
-            //no of sellers
-            //total earnings
-        } elseif(res.locals.roleId == Roles.Buyer){
-            //total records bought
-            myQuery= wait My_SQL.runQuery(`SELECT COUNT(RecordID) AS Records FROM UserRecords 
-                            WHERE ModifiedByID= ${res.locals.userID} AND RecordStatus ='${CONSTANTS.RecordStatues.SOLD}`);
-            if (myQuery && myQuery.error == 0) {
-                if(myQuery.data){
-                    dataObject.Result1= myQuery.data[0].Records;
-                }
-                
-            }
-            //amount paid
-            //amount balance
-        } elseif(res.locals.roleId == Roles.Seller){
-            //no of records uploaded
-            //no of records sold
-            //amount paid
-            //amount earned
-            //amount balance
-        }
-
-
-        let users = await My_SQL.runQuery(`SELECT A.UserID, A.UserName, B.role_name, A.EmailID, A.BTCAddress, A.JabberID, A.TelegramID, 
-                A.ActivationStatus, SUM(C.PaymentAmount) AS Earnings, SUM(D.PaymentAmount) AS Expenses  
-                FROM users A 
-                    INNER JOIN roles B ON A.UserRole = B.role_id
-                    INNER JOIN UserPayments C ON A.UserID= C.ToUserID AND C.PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'
-                    INNER JOIN UserPayments D ON A.UserID= D.ToUserID AND D.PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}' 
-                GROUP BY A.UserID
-                ORDER BY A.UserID`);
-        if (users && users.error == 0) {
-            if(users.data && users.data.length>0){
-                for (let user of users.data) {
-                    user.UserName= await UTILITIES_LIB.decrypt(user.UserName);
-                    user.BTCAddress= user.BTCAddress ? await UTILITIES_LIB.decrypt(user.BTCAddress) : "";
-                    user.EmailID= user.EmailID ? await UTILITIES_LIB.decrypt(user.EmailID) : "";    
-                    user.EmailID= user.JabberID ? await UTILITIES_LIB.decrypt(user.JabberID) : "";
-                    user.EmailID= user.TelegramID ? await UTILITIES_LIB.decrypt(user.TelegramID) : "";
-                }
-                dataObject.Users = users.data;
-                dataObject.totalCount= users.data.length;
-            }
-            dataObject.statusCode = STATUS_CODES.OK;
-            if (groupIds) {
-                let resources = await COMMON_CONTROLLER.getResources(langId, groupIds);
-                dataObject.statusCode = resources.statusCode;
-                if (dataObject.statusCode == STATUS_CODES.OK) {
-                    dataObject.PageResources = resources.resources;
-                }
-            }
+            dataObject= await GetAdminData(dataObject);
+        } else if(res.locals.roleId == Roles.Buyer){
+            dataObject= await GetBuyerData(dataObject);
+        } else if(res.locals.roleId == Roles.Seller){
+            dataObject= await GetSellerData(dataObject);
         }
         res.locals.statusCode = dataObject.statusCode;
         res.locals.dataObject = dataObject;
         next();
     } catch (error) {
-        LOGGER.servicesLogger(req, "getUsers", error.toString());
+        LOGGER.servicesLogger(req, "GetUserDashboard", error.toString());
         next(error);
     }
 };
-
 
 module.exports = {
     GetUsers,
     GetUserDetail,
     SaveUserDetail,
-    GetUserTransactions
+    GetUserTransactions,
+    GetUserDashboard
 };

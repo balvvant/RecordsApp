@@ -139,13 +139,13 @@ const GetUserRecords = async (req, res, next) => {
         }
         let viewRecords = req.body.view_records ? parseInt(req.body.view_records) : CONSTANTS.OtherConstants.Default_View_Records;
         let viewPage = req.body.view_page ? parseInt(req.body.view_page) : CONSTANTS.OtherConstants.Default_View_Page;
-        let whereCondition = `ModifiedByID= ${res.locals.userId} AND RecordStatus= '${CONSTANTS.RecordStatues.SOLD} AND RecordIsActive = ${CONSTANTS.Status.Active_Status}`;
+        let whereCondition = `ModifiedByID= ${res.locals.userId} AND RecordStatus= '${CONSTANTS.RecordStatues.SOLD}`;
         dataObject= await RetriveRecords(dataObject, whereCondition, false, viewRecords, viewPage, res.locals.languageId, res.locals.groupIds);
         res.locals.statusCode = dataObject.statusCode;
         res.locals.dataObject = dataObject;
         next();
     } catch (error) {
-        LOGGER.servicesLogger(req, "GetRecords", error.toString());
+        LOGGER.servicesLogger(req, "GetUserRecords", error.toString());
         next(error);
     }
 };
