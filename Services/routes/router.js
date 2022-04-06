@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {RootApi, ErrorLogger, ViewLanguages, AddLanguage, EditLanguage, ActivateDeactivateLanguage, LogIn, ChangePassword, LogOut, DeactivateUserSessions, ViewWebsiteMenus, ViewStaticPages, SaveWebsiteMenu, UploadStaticPageImage, DeleteStaticPageImages, SaveStaticPage, GetLandingPageMenus, GetCustomPageData, ViewLanguageResources, ViewSingleResource, EditLanguageResources, ExportLanguageResources, UploadBulkResources, GetPageResources, ViewUploadedContent, ViewUploadedIcon, ViewUploadedAttachment, GetInvitationCodes, CreateInvitationCode, GetRecordsForBuying, GetUserRecords, GetUserRecordsbasedOnStatus, SaveRecords, BuyRecords, RegisterUser, PayRegistrationFee, CreateSupportTicket, UpdateSupportTicket, GetMySupportTickets, GetMySupportTicket, GetUsers, GetUserDetail, GetUserTransactions} = require("../controllers/Index");
+const {RootApi, ErrorLogger, ViewLanguages, AddLanguage, EditLanguage, ActivateDeactivateLanguage, LogIn, ChangePassword, LogOut, DeactivateUserSessions, ViewWebsiteMenus, ViewStaticPages, SaveWebsiteMenu, UploadStaticPageImage, DeleteStaticPageImages, SaveStaticPage, GetLandingPageMenus, GetCustomPageData, ViewLanguageResources, ViewSingleResource, EditLanguageResources, ExportLanguageResources, UploadBulkResources, GetPageResources, ViewUploadedContent, ViewUploadedIcon, ViewUploadedAttachment, GetInvitationCodes, CreateInvitationCode, GetRecordsForBuying, GetUserRecords, GetUserRecordsbasedOnStatus, SaveRecords, BuyRecords, RegisterUser, PayRegistrationFee, CreateSupportTicket, UpdateSupportTicket, GetMySupportTickets, GetMySupportTicket, GetUsers, GetUserDetail, SaveUserDetail, GetUserTransactions} = require("../controllers/Index");
 
 
 router.route("/").get(RootApi).post(RootApi);
@@ -45,6 +45,7 @@ router.route("/get-my-support-tickets").post(GetMySupportTickets);
 router.route("/get-my-support-ticket").post(GetMySupportTicket);
 router.route("/get-users").post(GetUsers);
 router.route("/get-user").post(GetUserDetail);
+router.route("/save-user").post(SaveUserDetail);
 router.route("/get-user-transactions").post(GetUserTransactions);
 
 module.exports = router;

@@ -200,7 +200,11 @@ export const resourceGroups = {
     WEBSITE_MENU: 26,
     ARTICLE: 27,
     CONTENT_TYPE: 29,
-    RECORDS: 30,
+    USER_PROFILE_GROUP: 50,
+    USER_RECORDS_GROUP: 51,
+    SUPPORT_TICKET_GROUP:52,
+    COMMON_GROUP : 61,
+    INVITATION_CODES_GROUP : 63
 }
 
 export const DeckStatus = {
@@ -354,17 +358,62 @@ export const RESOURCE_KEYS = {
         STATE: "STATE",
         CITY: "CITY",
         ZIP: "ZIP",
-        RECORDS: "RECORDS",
-        RECORD: "RECORD",
+        RECORDS: "HEADER_RECORDS",
+        RECORD: "HEADER_RECORD",
         BULK_UPLOAD_RECORDS: "BULK_UPLOAD_RECORDS",
-        RECORDS_UPLOAD_STATUS: "RECORDS_UPLOAD_STATUS"
+        RECORDS_UPLOAD_STATUS: "RECORDS_UPLOAD_STATUS",
+        TransacationAmount : "TransacationAmount",
+        PaymentType : "PaymentType",
+        PaymentDateTime : "PaymentDateTime",
+        TransacationType : "TransacationType",
+        TotalCredit : "TotalCredit",
+        TotalDebit : "TotalDebit",
+        BalanceAmount : "BalanceAmount"
     },
     ERROR_CODES: {
         VALIDATION_ERROR: "5006",
         EXCEL_FILE_MISSING: "5013",
         NHS_NOT_AVAILABLE: "5023"
-    }
+    },
+    SUPPORTTICKET:{
+        HEADER_MY_TICKETS: "HEADER_MY_TICKETS",
+        HEADER_ADD_TICKET : "HEADER_ADD_TICKET",
+        DESCRIPTION: "DESCRIPTION",
+        MESSAGE_HEADER: "MESSAGE_HEADER",
+        MESSAGE_BODY: "MESSAGE_BODY",
+        MESSAGE_RESPONSE: "MESSAGE_RESPONSE",
+        SUCCESS: "SUCCESS",
+        TICKET_CREATED_ON: "TICKET_CREATED_ON",
+        IS_RESPONDED :"IS_RESPONDED",
+        TICKET_RESPONDED_ON : "TICKET_RESPONDED_ON"
+    },
+    INVITATIONCODES:{
+        HEADER_MY_INVITATION_CODES: "HEADER_MY_INVITATION_CODES",
+        HEADER_MY_INVITATION_CODE : "HEADER_MY_INVITATION_CODE",
+        INVITATION_CODE_FOR: "INVITATION_CODE_FOR",
+        INVITATION_CODE: "INVITATION_CODE",
+        INVITATION_CODE_STATUS: "INVITATION_CODE_STATUS"
+    },
+    USER_PROFILE :{
+        HEADER_USER_LIST : "HEADER_USER_LIST",
+        HEADER_ADD : "HEADER_ADD",
+        DESCRIPTION : "DESCRIPTION",
+        USERTYPE : "USERTYPE",
+        USERNAME : "USERNAME",
+        BTCADDRESS : "BTCADDRESS",
+        EMAIL : "EMAIL",
+        JABBERID : "JABBERID",
+        TELEGRAMID : "TELEGRAMID",
+        ACTIVATIONCODE : "ACTIVATIONCODE",
+        PASSWORD : "PASSWORD",
+        CONFIRMPASSWORD : "CONFIRMPASSWORD",
+        REGISTERBUTTON : "REGISTERBUTTON",
+        ALREADYUSER : "ALREADYUSER",
+        USER_EARNINGS : "USER_EARNINGS",
+        USER_EXPENSES : "USER_EXPENSES",
+        USER_ACTIVATION_STATUS : "USER_ACTIVATION_STATUS"
 
+    }
 };
 
 export const CONSTANTS = {
@@ -420,6 +469,16 @@ export const USER_STATUS = {
     INVITED: 1,
     ACTIVATED: 2
 }
+
+export const INVITATION_CODE_FOR = {
+    Buyer: 'Buyer',
+    Seller: 'Seller'
+}
+
+export const SINGLE_VALUES = {
+    PAGE_SIZE : 25,
+}
+
 
 export const PATIENT_OPT_OUT_COMPONENT = "PatientDeleteAccount";
 export const CLINICIAN_SWITCH_ORGANIZATION_COMPONENT = "SwitchOrganization";

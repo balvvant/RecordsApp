@@ -222,8 +222,9 @@ const ResourceGroups = {
     CLINICIAN_DASHBOARD: 18,
     COMMON: 2,
     LOGIN: 1,
-    RECORDS: 30,
-    ERROR_CODES: 31
+    USER_PROFILE : 50,
+    RECORDS: 51,
+    ERROR_CODES: 54
 }
 
 const Languages = {

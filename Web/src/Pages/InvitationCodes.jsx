@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { Modal } from "react-responsive-modal";
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, BUTTON_TYPES, CONSTANTS, GLOBAL_API, resourceGroups , RESOURCE_KEYS } from "../Constants/types";
-import AddEditTicket from '../Modals/AddEditSupportTicketModal';
+import { API_METHODS, BUTTON_TYPES, CONSTANTS, GLOBAL_API, resourceGroups , RESOURCE_KEYS, SINGLE_VALUES } from "../Constants/types";
+import AddEditInvitationCode from '../Modals/AddEditInvitationCodeModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
-class SupportTickets extends Component {
+class InvitationCodes extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,10 +17,10 @@ class SupportTickets extends Component {
             resources: [],
             totalRecords: 0,
             columns: [],
-            ticketId: null,
+            inviteCodeId: null,
             searchCategories: [],
             searchCategory: '',
-            openAddEditTicketModal: false,
+            openAddEditInvitationCodeModal: false,
             pageSize: SINGLE_VALUES.PAGE_SIZE,
             currentPage: 1,
         }
@@ -36,9 +36,9 @@ class SupportTickets extends Component {
             let obj = {
                 method: API_METHODS.POST,
                 history: this.props.history,
-                api: '/get-my-support-tickets',
+                api: '/get-invitation-codes',
                 body: {
-                    groupIds: this.state.resources.length == 0 ? `${resourceGroups.COMMON_GROUP},${resourceGroups.SUPPORT_TICKET_GROUP}` : ``,
+                    groupIds: this.state.resources.length == 0 ? `${resourceGroups.COMMON_GROUP},${resourceGroups.INVITATION_CODES_GROUP}` : ``,
                     searchString: this.state.searchVal ? this.state.searchVal : "",
                     deleted: 0,
                     search_column: this.state.searchCategory,
@@ -52,34 +52,28 @@ class SupportTickets extends Component {
                     let resources = recordsResult.data.data.PageResources;
                     let columns = [
                         {
-                            databaseColumn: 'MessageHeader',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.MESSAGE_HEADER),
+                            databaseColumn: 'ActivationCodeType',
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE_FOR),
                             isSort: true,
                         },
                         {
-                            databaseColumn: 'CreatedAt',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.TICKET_CREATED_ON),
+                            databaseColumn: 'ActivationCode',
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE),
                             isSort: true,
-                            width: "15%",
+                            width: "40%",
                         },
                         {
-                            databaseColumn: 'IsResponded',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.IS_RESPONDED),
+                            databaseColumn: 'Status',
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE_STATUS),
                             isSort: true,
                             width: "10%",
-                        },
-                        {
-                            databaseColumn: 'RespondedON',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.TICKET_RESPONDED_ON),
-                            isSort: false,
-                            width: "15%",
                         },
                     ];
                     localStorage.setItem("resources", JSON.stringify(resources));
                     this.setState({ columns: columns, resources: resources, searchCategories: searchCategories });
                 }
-                if (recordsResult.data.data?.UserTickets && recordsResult.data.data?.UserTickets.length > 0) {
-                    this.setState({ records: recordsResult.data.data.UserTickets, totalRecords: recordsResult.data.data.totalCount });
+                if (recordsResult.data.data?.ActivationCodes && recordsResult.data.data?.ActivationCodes.length > 0) {
+                    this.setState({ records: recordsResult.data.data.ActivationCodes, totalRecords: recordsResult.data.data.totalCount });
                 } else {
                     this.setState({ records: [], totalRecords: 0 });
                 }
@@ -90,7 +84,7 @@ class SupportTickets extends Component {
             }
         } catch (error) {
             let errorObject = {
-                methodName: "SupportTickets/ViewRecordsAsync",
+                methodName: "InvitationCodes/ViewRecordsAsync",
                 errorStake: error.toString(),
                 history:this.props.history
             };
@@ -107,7 +101,7 @@ class SupportTickets extends Component {
         if (val) {
             this.ViewRecordsAsync();
         }
-        this.setState({ openAddEditTicketModal: false });
+        this.setState({ openAddEditInvitationCodeModal: false });
     }
 
     GoToPage = (ev, val) => {
@@ -125,7 +119,7 @@ class SupportTickets extends Component {
             }
         } catch (error) {
             let errorObject = {
-                methodName: "records/goToPage",
+                methodName: "InvitationCodes/goToPage",
                 errorStake: error.toString(),
                 history:this.props.history
             };
@@ -142,7 +136,7 @@ class SupportTickets extends Component {
                             buttons={[
                                     {
                                         text: `+ ${getResourceValue(this.state.resources, RESOURCE_KEYS.COMMON.ADD)}`,
-                                        onClick: () => this.setState({ ticketId: null, openAddEditTicketModal: true }),
+                                        onClick: () => this.setState({ inviteCodeId: null, openAddEditInvitationCodeModal: true }),
                                         type: BUTTON_TYPES.PRIMARY
                                     }
                                 ]}
@@ -152,14 +146,14 @@ class SupportTickets extends Component {
                             dataArray={this.state.records}
                             resources={this.state.resources}
                             columnArray={this.state.columns}
-                            tableTitle={getResourceValue(this.state.resources, RESOURCE_KEYS.SUPPORTTICKET.HEADER_MY_TICKETS)}
-                            primaryKey={'TicketID'}
+                            tableTitle={getResourceValue(this.state.resources, RESOURCE_KEYS.INVITATIONCODES.HEADER_MY_TICKETS)}
+                            primaryKey={'InvitationCodeID'}
                             totalCount={this.state.totalRecords}
                             searchVal={this.state.searchVal}
                             changeValue={(ev) => this.setState({ searchVal: ev.target.value })}
                             searchFilter={this.SearchFilter}
                             viewBasicApi={this.ViewRecordsAsync}
-                            openEditUserModalFunc={(id) => this.setState({ ticketId: id }, () => { this.setState({ openAddEditTicketModal: true }) })}
+                            //openEditUserModalFunc={(id) => this.setState({ inviteCodeId: id }, () => { this.setState({ openAddEditInvitationCodeModal: true }) })}
                             customColumn={getResourceValue(this.state.resources, RESOURCE_KEYS.COMMON.ACTION)}
                             tabArray={this.state.searchCategories}
                             currentTabActive={this.state.searchCategory}
@@ -168,9 +162,9 @@ class SupportTickets extends Component {
                             changePageSize={(ev) => this.setState({ pageSize: ev.target.value, currentPage: 1 }, () => this.ViewRecordsAsync())}
                         />
                     </div>
-                    {this.state.openAddEditTicketModal ?
-                        <AddEditTicket
-                            ticketId={this.state.ticketId}
+                    {this.state.openAddEditInvitationCodeModal ?
+                        <AddEditInvitationCode
+                            inviteCodeId={this.state.inviteCodeId}
                             closeCallBackOption={this.ViewRecordsAsync}
                             onCloseModal={this.CloseAddUserModal}
                             history={this.props.history}
@@ -186,4 +180,4 @@ const mapStateToProps = state => ({
     languageId: state.common.languageId,
 })
 
-export default connect(mapStateToProps)(withRouter(SupportTickets));
+export default connect(mapStateToProps)(withRouter(InvitationCodes));

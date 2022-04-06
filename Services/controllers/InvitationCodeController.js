@@ -12,17 +12,24 @@ const GetInvitationCodes = async (req, res, next) => {
       let viewRecords = req.body.view_records ? parseInt(req.body.view_records) : CONSTANTS.OtherConstants.Default_View_Records;
       let viewPage = req.body.view_page ? parseInt(req.body.view_page) : CONSTANTS.OtherConstants.Default_View_Page;
       let userQuery = await My_SQL.runQuery(
-          `SELECT TicketID, MessageHeader, MessageBody, MessageResponse, CreatedAt, ModifiedAt, '' AS Responded  
-          FROM supporttickets 
+          `SELECT A.ActivationCodeID, A.ActivationCodeType, A.ActivationCode, '' AS Status, B.UerID 
+          FROM UserActivationCodes A LEFT JOIN USER B ON A.ActivationCodeID= B.ActivationCodeID 
           WHERE IsActive= ${CONSTANTS.Status.Active_Status} 
           ORDER BY ModifiedAt DESC
           LIMIT ${viewRecords} OFFSET ${viewRecords * (viewPage - 1)}`
       );
       if (userQuery && userQuery.error == 0) {
           if (userQuery.data && userQuery.data.length > 0) {
+            for (let recordObject of userQuery.data) {
+                if(recordObject.UserID){
+                    recordObject.Status= "Not Used";
+                } else {
+                    recordObject.Status= "Used";
+                }
+            }
               dataObject.ActivationCodes = userQuery.data;
               //get total records count
-              userQuery = await My_SQL.runQuery(`SELECT COUNT(TicketID) AS TotalCount FROM supporttickets WHERE IsActive= ${CONSTANTS.Status.Active_Status}`);
+              userQuery = await My_SQL.runQuery(`SELECT COUNT(ActivationCodeID) AS TotalCount FROM UserActivationCodes WHERE IsActive= ${CONSTANTS.Status.Active_Status}`);
               if (userQuery && userQuery.error == 0 && userQuery.data) {
                   dataObject.totalCount = userQuery.data[0].TotalCount;
                   dataObject.statusCode = STATUS_CODES.OK;

@@ -25,7 +25,7 @@ class Records extends Component {
             isArchive: props.isArchive,
             archiveModal: false,
             bulkUploadModal: false,
-            pageSize: 25,
+            pageSize: SINGLE_VALUES.PAGE_SIZE,
             currentPage: 1,
         }
     }
@@ -53,7 +53,7 @@ class Records extends Component {
                 history: this.props.history,
                 api: '/get-records',
                 body: {
-                    groupIds: this.state.resources.length == 0 ? `${resourceGroups.COMMON},${resourceGroups.RECORDS},${resourceGroups.ARCHIVE}` : ``,
+                    groupIds: this.state.resources.length == 0 ? `${resourceGroups.COMMON_GROUP},${resourceGroups.USER_RECORDS_GROUP}` : ``,
                     searchString: this.state.searchVal ? this.state.searchVal : "",
                     deleted: this.props.isArchive ? 1 : 0,
                     search_column: this.state.searchCategory,
@@ -174,7 +174,7 @@ class Records extends Component {
             }
         } catch (error) {
             let errorObject = {
-                methodName: "uploadRecords/ViewRecordsAsync",
+                methodName: "ViewRecordsAsync",
                 errorStake: error.toString(),
                 history:this.props.history
             };

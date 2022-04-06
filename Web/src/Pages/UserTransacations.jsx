@@ -8,7 +8,7 @@ import AddEditTicket from '../Modals/AddEditSupportTicketModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
-class SupportTickets extends Component {
+class UserTransacations extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,10 +17,8 @@ class SupportTickets extends Component {
             resources: [],
             totalRecords: 0,
             columns: [],
-            ticketId: null,
             searchCategories: [],
             searchCategory: '',
-            openAddEditTicketModal: false,
             pageSize: SINGLE_VALUES.PAGE_SIZE,
             currentPage: 1,
         }
@@ -36,9 +34,9 @@ class SupportTickets extends Component {
             let obj = {
                 method: API_METHODS.POST,
                 history: this.props.history,
-                api: '/get-my-support-tickets',
+                api: '/get-user-transactions',
                 body: {
-                    groupIds: this.state.resources.length == 0 ? `${resourceGroups.COMMON_GROUP},${resourceGroups.SUPPORT_TICKET_GROUP}` : ``,
+                    groupIds: this.state.resources.length == 0 ? `${resourceGroups.COMMON_GROUP},${resourceGroups.USER_RECORDS_GROUP}` : ``,
                     searchString: this.state.searchVal ? this.state.searchVal : "",
                     deleted: 0,
                     search_column: this.state.searchCategory,
@@ -52,27 +50,28 @@ class SupportTickets extends Component {
                     let resources = recordsResult.data.data.PageResources;
                     let columns = [
                         {
-                            databaseColumn: 'MessageHeader',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.MESSAGE_HEADER),
+                            databaseColumn: 'PaymentAmount',
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.RECORD.TransacationAmount),
                             isSort: true,
+                            width: "25%",
+                        },
+                        {
+                            databaseColumn: 'PaymentType',
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.RECORD.PaymentType),
+                            isSort: true,
+                            width: "25%",
                         },
                         {
                             databaseColumn: 'CreatedAt',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.TICKET_CREATED_ON),
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.RECORD.PaymentDateTime),
                             isSort: true,
-                            width: "15%",
+                            width: "25%",
                         },
                         {
-                            databaseColumn: 'IsResponded',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.IS_RESPONDED),
-                            isSort: true,
-                            width: "10%",
-                        },
-                        {
-                            databaseColumn: 'RespondedON',
-                            columnName: getResourceValue(resources, RESOURCE_KEYS.SUPPORTTICKET.TICKET_RESPONDED_ON),
+                            databaseColumn: 'TranscationType',
+                            columnName: getResourceValue(resources, RESOURCE_KEYS.RECORD.TransacationType),
                             isSort: false,
-                            width: "15%",
+                            width: "25%",
                         },
                     ];
                     localStorage.setItem("resources", JSON.stringify(resources));
@@ -90,7 +89,7 @@ class SupportTickets extends Component {
             }
         } catch (error) {
             let errorObject = {
-                methodName: "SupportTickets/ViewRecordsAsync",
+                methodName: "UserTransacations/ViewRecordsAsync",
                 errorStake: error.toString(),
                 history:this.props.history
             };
@@ -125,7 +124,7 @@ class SupportTickets extends Component {
             }
         } catch (error) {
             let errorObject = {
-                methodName: "records/goToPage",
+                methodName: "UserTransacations/goToPage",
                 errorStake: error.toString(),
                 history:this.props.history
             };
@@ -139,27 +138,18 @@ class SupportTickets extends Component {
                 <div>
                     <div className="mb-10">
                         <CustomTableComponent
-                            buttons={[
-                                    {
-                                        text: `+ ${getResourceValue(this.state.resources, RESOURCE_KEYS.COMMON.ADD)}`,
-                                        onClick: () => this.setState({ ticketId: null, openAddEditTicketModal: true }),
-                                        type: BUTTON_TYPES.PRIMARY
-                                    }
-                                ]}
                             showSearchBar={true}
                             showFilter={true}
                             showSpecficSearch={true}
                             dataArray={this.state.records}
                             resources={this.state.resources}
                             columnArray={this.state.columns}
-                            tableTitle={getResourceValue(this.state.resources, RESOURCE_KEYS.SUPPORTTICKET.HEADER_MY_TICKETS)}
-                            primaryKey={'TicketID'}
+                            tableTitle={getResourceValue(this.state.resources, RESOURCE_KEYS.RECORD.RECORDS)}
                             totalCount={this.state.totalRecords}
                             searchVal={this.state.searchVal}
                             changeValue={(ev) => this.setState({ searchVal: ev.target.value })}
                             searchFilter={this.SearchFilter}
                             viewBasicApi={this.ViewRecordsAsync}
-                            openEditUserModalFunc={(id) => this.setState({ ticketId: id }, () => { this.setState({ openAddEditTicketModal: true }) })}
                             customColumn={getResourceValue(this.state.resources, RESOURCE_KEYS.COMMON.ACTION)}
                             tabArray={this.state.searchCategories}
                             currentTabActive={this.state.searchCategory}
@@ -168,14 +158,6 @@ class SupportTickets extends Component {
                             changePageSize={(ev) => this.setState({ pageSize: ev.target.value, currentPage: 1 }, () => this.ViewRecordsAsync())}
                         />
                     </div>
-                    {this.state.openAddEditTicketModal ?
-                        <AddEditTicket
-                            ticketId={this.state.ticketId}
-                            closeCallBackOption={this.ViewRecordsAsync}
-                            onCloseModal={this.CloseAddUserModal}
-                            history={this.props.history}
-                            resources={this.state.resources}
-                        /> : null}
                 </div>
             </>
         )
@@ -186,4 +168,4 @@ const mapStateToProps = state => ({
     languageId: state.common.languageId,
 })
 
-export default connect(mapStateToProps)(withRouter(SupportTickets));
+export default connect(mapStateToProps)(withRouter(UserTransacations));

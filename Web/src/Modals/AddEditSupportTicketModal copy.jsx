@@ -21,7 +21,7 @@ const AddEditSupportTicketModal = React.memo((props) => {
     }, []);
 
     const FetchTicketAsync = async (id) => {
-        try {
+        try {vi
             globalLoader(true);
             let obj = {
                 method: API_METHODS.POST,

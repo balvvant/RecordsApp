@@ -125,6 +125,11 @@ const GetMySupportTicket = async (req, res, next) => {
                     dataObject.PageResources = resources.resources;
                 }
             }
+            if(res.locals.roleId == CONSTANTS.Roles.SuperAdmin){
+                dataObject.EnableResponse= true;
+            } else {
+                dataObject.EnableResponse= false;
+            }
         }
         res.locals.statusCode = dataObject.statusCode;
         res.locals.dataObject = dataObject;
