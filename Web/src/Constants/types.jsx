@@ -321,6 +321,8 @@ export const RESOURCE_KEYS = {
     PRIVACY_NOTICE: "4052717230",
     TERMS_OF_USE: "670381840",
     COMMON: {
+        Code4Buyer : "Code4Buyer",
+        Code4Seller : "Code4Seller",
         RESTORE: "RESTORE",
         ADD_TO_ARCHIVE: "ADD_TO_ARCHIVE",
         ADD: "ADD",
@@ -399,6 +401,7 @@ export const RESOURCE_KEYS = {
     USER_PROFILE :{
         HEADER_USER_LIST : "HEADER_USER_LIST",
         HEADER_ADD : "HEADER_ADD",
+        HEADER_REGISTER_USER : "HEADER_REGISTER_USER",
         DESCRIPTION : "DESCRIPTION",
         USERTYPE : "USERTYPE",
         USERNAME : "USERNAME",

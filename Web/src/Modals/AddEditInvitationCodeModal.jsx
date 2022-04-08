@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, resourceFields, RESOURCE_KEYS } from '../Constants/types';
+import { API_METHODS, CONSTANTS, resourceFields, RESOURCE_KEYS, INVITATION_CODE_FOR } from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField } from '../Functions/CommonFunctions';
 
 const AddEditInvitationCodeModal = React.memo((props) => {
     let [ActivationCode, SetActivationCode] = useState('');
-    let [ActivationCodeErrorMessage, setMessageHeaderErrorMessage] = useState('');
+    let [ActivationCodeErrorMessage, setActivationCodeErrorMessage] = useState('');
     let [ActivationCodeFor, SetActivationCodeFor] = useState('');
     let [ActivationCodeForErrorMessage, SetActivationCodeForErrorMessage] = useState('');
 
@@ -52,9 +52,9 @@ const AddEditInvitationCodeModal = React.memo((props) => {
         let messageHeader = ValidateField(props.resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE, ActivationCode);
         if (messageHeader.error) {
             formValid = false;
-            setMessageHeaderErrorMessage(messageHeader.message)
+            setActivationCodeErrorMessage(messageHeader.message)
         } else {
-            setMessageHeaderErrorMessage('');
+            setActivationCodeErrorMessage('');
         }
         let messageBody = ValidateField(props.resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE_FOR, ActivationCodeFor);
         if (messageBody.error) {
@@ -69,14 +69,14 @@ const AddEditInvitationCodeModal = React.memo((props) => {
     return (
         <Modal classNames={{ modal: "modal-lg modal-own" }} open={true} onClose={() => props.onCloseModal()} center closeOnOverlayClick={false} showCloseIcon={false}>
             <form className="form-own" noValidate autoComplete="off" onSubmit={(ev) => ev.preventDefault()}>
-                <p className="login-txt  primary-color mb-0 cpb-10">{props.data?.codeID ? getResourceValue(props.resources, RESOURCE_KEYS.COMMON.EDIT) : getResourceValue(props.resources, RESOURCE_KEYS.COMMON.ADD)} {getResourceValue(props.resources, RESOURCE_KEYS.SUPPORTTICKET.HEADER_ADD_TICKET)}</p>
+                <p className="login-txt  primary-color mb-0 cpb-10">{props.data?.codeID ? getResourceValue(props.resources, RESOURCE_KEYS.COMMON.EDIT) : getResourceValue(props.resources, RESOURCE_KEYS.COMMON.ADD)} {getResourceValue(props.resources, RESOURCE_KEYS.INVITATIONCODES.HEADER_MY_INVITATION_CODE)}</p>
                 <div className="form-own add-list-form flex-wrap row m-0 p-0" >
                     <div className="col-md-6 col-12 cpt-10 cpb-10 pl-0" >
                         <div>
                             <TextField
                                 id="outlined-textarea"
-                                label={getResourceValue(props.resources, RESOURCE_KEYS.SUPPORTTICKET.MESSAGE_HEADER)}
-                                placeholder={getResourceValue(props.resources, RESOURCE_KEYS.SUPPORTTICKET.MESSAGE_HEADER, resourceFields.Placeholder)}
+                                label={getResourceValue(props.resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE)}
+                                placeholder={getResourceValue(props.resources, RESOURCE_KEYS.INVITATIONCODES.INVITATION_CODE, resourceFields.Placeholder)}
                                 className='mt-0 mb-0 d-flex'
                                 margin="normal"
                                 variant="outlined"
@@ -96,12 +96,15 @@ const AddEditInvitationCodeModal = React.memo((props) => {
                                 <div className="col-12">
                                     <RadioGroup name="lockContent" className="flex-row" value={ActivationCodeFor} >
                                         <div>
-                                            <FormControlLabel value={INVITATION_CODE_FOR.Buyer} control={<Radio onChange={(ev) => SetActivationCodeFor(INVITATION_CODE_FOR.Buyer)} />} label={getResourceValue(props.resources, 'Code4Buyer')} />
+                                            <FormControlLabel value={INVITATION_CODE_FOR.Buyer} control={<Radio onChange={(ev) => SetActivationCodeFor(INVITATION_CODE_FOR.Buyer)} />} label={getResourceValue(props.resources, RESOURCE_KEYS.COMMON.Code4Buyer)}   />
                                         </div>
                                         <div>
-                                            <FormControlLabel value={INVITATION_CODE_FOR.Seller} control={<Radio onChange={(ev) => SetActivationCodeFor(INVITATION_CODE_FOR.Seller)} />} label={getResourceValue(props.resources, 'Code4Seller')} />
+                                            <FormControlLabel value={INVITATION_CODE_FOR.Seller} control={<Radio onChange={(ev) => SetActivationCodeFor(INVITATION_CODE_FOR.Seller)} />} label={getResourceValue(props.resources, RESOURCE_KEYS.COMMON.Code4Seller)} />
                                         </div>
                                     </RadioGroup>
+                                    <div className="error-wrapper">
+                                        <span>{ActivationCodeForErrorMessage}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

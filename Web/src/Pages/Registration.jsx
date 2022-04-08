@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { changeCurrentSidebarSubMenu, changeOpenComponent, changeOrgId, changeResourceKey, changeTheScreen, errorLogger, globalAlert, globalLoader, updateLanguageList, verifyRoute } from '../actions/commonActions';
-import { API_METHODS, defaultLanguage, PRIMARY_COLOR, PRIMARY_FONT_COLOR, resourceFields, resourceGroups, RESOURCE_KEYS,CONSTANTS, SCREENS } from '../Constants/types';
+import { API_METHODS, defaultLanguage, PRIMARY_COLOR, PRIMARY_FONT_COLOR, resourceFields, resourceGroups, RESOURCE_KEYS,CONSTANTS, SCREENS, INVITATION_CODE_FOR} from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField} from '../Functions/CommonFunctions';
 
 class Registration extends Component {
@@ -184,184 +184,181 @@ class Registration extends Component {
                 <div className="d-flex flex-wrap w-100 justify-content-center">
                     <div className="form-width-sm w-100 contain-container" style={{ paddingBottom: "5vw" }}>
                         <div className="px-3">
-                                <div>
-                                    <p className="login-txt mb-3 pb-1 primary-color">{getResourceValue(props.resources, 'HEADER')}</p>
-                                        <form className="form-own" noValidate autoComplete="off" onSubmit={(ev) => this.registerUser(ev)}>  
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.USERNAME)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.USERNAME, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="username"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.userName}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.userNameErrorMessage}
-                                                </div>
+                            <div>
+                                <p className="login-txt mb-3 pb-1 primary-color">{getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.HEADER_REGISTER_USER)}</p>
+                                <form className="form-own" noValidate autoComplete="off" onSubmit={(ev) => this.registerUser(ev)}>  
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <RadioGroup name="lockContent" className="flex-row" value={userRole} >
+                                            <div>
+                                                <FormControlLabel value={INVITATION_CODE_FOR.Buyer} control={<Radio onChange={(ev) => SetActivationCodeFor(INVITATION_CODE_FOR.Buyer)} />} label={getResourceValue(props.resources, RESOURCE_KEYS.COMMON.Code4Buyer)} />
                                             </div>
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.EMAIL)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.EMAIL, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="emailId"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.emailId}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.emailErrorMessage}
-                                                </div>
+                                            <div>
+                                                <FormControlLabel value={INVITATION_CODE_FOR.Seller} control={<Radio onChange={(ev) => SetActivationCodeFor(INVITATION_CODE_FOR.Seller)} />} label={getResourceValue(props.resources, RESOURCE_KEYS.COMMON.Code4Buyer)} />
                                             </div>
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.BTCADDRESS)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.BTCADDRESS, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="emailId"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.btcAddress}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.btcAddressErrorMessage}
-                                                </div>
-                                            </div>
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.JABBERID)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.JABBERID, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="emailId"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.jabberId}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.jabberIdErrorMessage}
-                                                </div>
-                                            </div>
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.TELEGRAMID)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.TELEGRAMID, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="emailId"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.telegramId}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.telegramIdErrorMessage}
-                                                </div>
-                                            </div>
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.ACTIVATIONCODE)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.ACTIVATIONCODE, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="emailId"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.activationCode}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.activationCodeErrorMessage}
-                                                </div>
-                                            </div>
-
-                                            <div className="form-group-icon position-relative form-group pb-1">
-                                                <TextField
-                                                    label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.EMAIL)}
-                                                    placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.EMAIL, resourceFields.Placeholder)}
-                                                    className='mt-0 mb-0 d-flex'
-                                                    margin="normal"
-                                                    variant="outlined"
-                                                    name="emailId"
-                                                    onChange={(ev) => this.changeValue(ev)}
-                                                    value={this.state.emailId}
-                                                />
-                                                <div className="form-img-wrapper no-pointer">
-                                                    <img src="/assets/img/lock-arrow.png" alt="lock" />
-                                                </div>
-                                                <div className="error-wrapper">
-                                                    {this.state.emailErrorMessage}
-                                                </div>
-                                            </div>
-                                        <div className="form-group-icon form-group">
-                                            <TextField
-                                                type={this.state.passwordVisible ? "text" : "password"}
-                                                id="outlined-password-input"
-                                                label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.PASSWORD)}
-                                                placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.PASSWORD, resourceFields.Placeholder)}
-                                                className='mt-0 mb-0 d-flex'
-                                                margin="normal"
-                                                variant="outlined"
-                                                name="password"
-                                                onChange={(ev) => this.changeValue(ev)}
-                                                value={this.state.password}
-                                            />
-                                            <div className="form-img-wrapper cursor" onClick={() => this.toggleEye('passwordVisible')}>
-                                                {this.state.passwordVisible ? <img src="/assets/img/eye-close.png" alt="lock" /> : <img src="/assets/img/eye.png" alt="lock" />}
-                                            </div>
-                                            <div className="error-wrapper">
-                                                <span>{this.state.passwordErrorMessage}</span>
-                                            </div>
+                                        </RadioGroup>
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
                                         </div>
-                                        <div className="form-group-icon form-group">
-                                            <TextField
-                                                type={this.state.passwordVisible ? "text" : "password"}
-                                                id="outlined-password-input"
-                                                label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.CONFIRMPASSWORD)}
-                                                placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.CONFIRMPASSWORD, resourceFields.Placeholder)}
-                                                className='mt-0 mb-0 d-flex'
-                                                margin="normal"
-                                                variant="outlined"
-                                                name="password"
-                                                onChange={(ev) => this.changeValue(ev)}
-                                                value={this.state.confirmPassword}
-                                            />
-                                            <div className="form-img-wrapper cursor" onClick={() => this.toggleEye('passwordVisible')}>
-                                                {this.state.passwordVisible ? <img src="/assets/img/eye-close.png" alt="lock" /> : <img src="/assets/img/eye.png" alt="lock" />}
-                                            </div>
-                                            <div className="error-wrapper">
-                                                <span>{this.state.confirmPasswordErrorMessage}</span>
-                                            </div>
+                                        <div className="error-wrapper">
+                                            {this.state.userNameErrorMessage}
                                         </div>
-                                        <div className="pb-3 btn-wrapper">
-                                            <button type="submit" className="btn btn-own btn-block btn-own-primary min-height-btn mw-100">{getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.REGISTERBUTTON)}</button>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.USERNAME)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.USERNAME, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="username"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.userName}
+                                        />
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
                                         </div>
-                                        <div className="text-right forgot-wrapper pb-3 font-bold">
-                                            <a href={`#`} onClick={() => changeTheScreen(SCREENS.LOGIN)} className="link-color">{getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.ALREADYUSER)}</a>
+                                        <div className="error-wrapper">
+                                            {this.state.userNameErrorMessage}
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.EMAIL)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.EMAIL, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="emailId"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.emailId}
+                                        />
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
+                                        </div>
+                                        <div className="error-wrapper">
+                                            {this.state.emailErrorMessage}
+                                        </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.BTCADDRESS)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.BTCADDRESS, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="emailId"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.btcAddress}
+                                        />
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
+                                        </div>
+                                        <div className="error-wrapper">
+                                            {this.state.btcAddressErrorMessage}
+                                        </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.JABBERID)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.JABBERID, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="emailId"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.jabberId}
+                                        />
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
+                                        </div>
+                                        <div className="error-wrapper">
+                                            {this.state.jabberIdErrorMessage}
+                                        </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.TELEGRAMID)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.TELEGRAMID, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="emailId"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.telegramId}
+                                        />
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
+                                        </div>
+                                        <div className="error-wrapper">
+                                            {this.state.telegramIdErrorMessage}
+                                        </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.ACTIVATIONCODE)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.ACTIVATIONCODE, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="emailId"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.activationCode}
+                                        />
+                                        <div className="form-img-wrapper no-pointer">
+                                            <img src="/assets/img/lock-arrow.png" alt="lock" />
+                                        </div>
+                                        <div className="error-wrapper">
+                                            {this.state.activationCodeErrorMessage}
+                                        </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            type={this.state.passwordVisible ? "text" : "password"}
+                                            id="outlined-password-input"
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.PASSWORD)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.PASSWORD, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="password"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.password}
+                                        />
+                                        <div className="form-img-wrapper cursor" onClick={() => this.toggleEye('passwordVisible')}>
+                                            {this.state.passwordVisible ? <img src="/assets/img/eye-close.png" alt="lock" /> : <img src="/assets/img/eye.png" alt="lock" />}
+                                        </div>
+                                        <div className="error-wrapper">
+                                            <span>{this.state.passwordErrorMessage}</span>
+                                        </div>
+                                    </div>
+                                    <div className="form-group-icon position-relative form-group pb-1">
+                                        <TextField
+                                            type={this.state.confirmPasswordVisible ? "text" : "password"}
+                                            id="outlined-password-input"
+                                            label={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.CONFIRMPASSWORD)}
+                                            placeholder={getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.CONFIRMPASSWORD, resourceFields.Placeholder)}
+                                            className='mt-0 mb-0 d-flex'
+                                            margin="normal"
+                                            variant="outlined"
+                                            name="password"
+                                            onChange={(ev) => this.changeValue(ev)}
+                                            value={this.state.confirmPassword}
+                                        />
+                                        <div className="form-img-wrapper cursor" onClick={() => this.toggleEye('confirmPasswordVisible')}>
+                                            {this.state.confirmPasswordVisible ? <img src="/assets/img/eye-close.png" alt="lock" /> : <img src="/assets/img/eye.png" alt="lock" />}
+                                        </div>
+                                        <div className="error-wrapper">
+                                            <span>{this.state.confirmPasswordErrorMessage}</span>
+                                        </div>
+                                    </div>
+                                    <div className="pb-3 btn-wrapper">
+                                        <button type="submit" className="btn btn-own btn-block btn-own-primary min-height-btn mw-100">{getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.REGISTERBUTTON)}</button>
+                                    </div>
+                                    <div className="text-right forgot-wrapper pb-3 font-bold">
+                                        <a href={`#`} onClick={() => changeTheScreen(SCREENS.LOGIN)} className="link-color">{getResourceValue(props.resources, RESOURCE_KEYS.USER_PROFILE.ALREADYUSER)}</a>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
