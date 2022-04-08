@@ -117,7 +117,6 @@ const ViewUploadedIcon = async (req, res, next) => {
   }
 };
 
-
 const ViewUploadedAttachment = async (req, res, next) => {
   try {
     let statusCode = STATUS_CODES.VALIDATION_ERROR;

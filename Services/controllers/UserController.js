@@ -7,14 +7,18 @@ const LOGGER = require("../utils/logger");
 const My_SQL = require("../config/database/sql");
 const { UserModel } = require('../models/UserModel');
 const { Roles } = require('../utils/Constants');
+const COMMON_FUNCTIONS = require('../functions/CommonFunctions');
 
 async function GetBuyerData(dataObject){
+    let labelResource ="";
     let myQuery= await My_SQL.runQuery(`SELECT COUNT(RecordID) AS Records FROM UserRecords 
     WHERE ModifiedByID= ${res.locals.userID} AND RecordStatus ='${CONSTANTS.RecordStatues.SOLD}`);
     if (myQuery && myQuery.error == 0) {
         if(myQuery.data){
             //total records bought
             dataObject.Result1= myQuery.data[0].Records;
+            labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('RECORDS_BOUGHT_COUNT', dataObject.PageResources);
+            dataObject.Result1Label= labelResource.resource_value;
         }
         myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Earnings  
         FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'`);
@@ -22,6 +26,8 @@ async function GetBuyerData(dataObject){
             if(myQuery.data){
                 //total Recharge or credit    
                 dataObject.Result2= myQuery.data[0].Earnings;
+                labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('TOTAL_CREDIT', dataObject.PageResources);
+                dataObject.Result2Label= labelResource.resource_value;
             }
             myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Expenses  
             FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}'`);
@@ -29,8 +35,12 @@ async function GetBuyerData(dataObject){
                 if(myQuery.data){
                     //total expenses or debit    
                     dataObject.Result3= myQuery.data[0].Expenses;
+                    labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('TOTAL_DEBIT', dataObject.PageResources);
+                    dataObject.Result3Label= labelResource.resource_value;
                     //total available balance
-                    dataObject.Result4= dataObject.Result2- dataObject.Result3 ;
+                    dataObject.Result4= dataObject.Result2- dataObject.Result3;
+                    labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('AVAILABLE_BALANCE', dataObject.PageResources);
+                    dataObject.Result4Label= labelResource.resource_value;
                 }
                 dataObject.statusCode= STATUS_CODES.OK;
             }  
@@ -46,6 +56,8 @@ async function GetSellerData(dataObject){
         if(myQuery.data){
             //total records uploaded
             dataObject.Result1= myQuery.data[0].Records;
+            labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('RECORDS_UPLOADED_COUNT', dataObject.PageResources);
+            dataObject.Result1Label= labelResource.resource_value;
         }
         myQuery= await My_SQL.runQuery(`SELECT COUNT(RecordID) AS Records FROM UserRecords 
             WHERE CreatedByID= ${res.locals.userID} AND RecordStatus ='${CONSTANTS.RecordStatues.SOLD}`);
@@ -53,6 +65,8 @@ async function GetSellerData(dataObject){
             if(myQuery.data){
                 //total records Sold
                 dataObject.Result2= myQuery.data[0].Records;
+                labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('RECORDS_SOLD_COUNT', dataObject.PageResources);
+                dataObject.Result2Label= labelResource.resource_value;
             }    
             myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Earnings  
             FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'`);
@@ -60,6 +74,8 @@ async function GetSellerData(dataObject){
                 if(myQuery.data){
                     //total earnings or credit    
                     dataObject.Result3= myQuery.data[0].Earnings;
+                    labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('TOTAL_CREDIT', dataObject.PageResources);
+                    dataObject.Result3Label= labelResource.resource_value;
                 }
                 myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Expenses  
                 FROM UserPayments WHERE ToUserID= ${res.locals.userId} AND PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}'`);
@@ -67,8 +83,12 @@ async function GetSellerData(dataObject){
                     if(myQuery.data){
                         //total expenses or debit    
                         dataObject.Result4= myQuery.data[0].Expenses;
+                        labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('TOTAL_DEBIT', dataObject.PageResources);
+                        dataObject.Result4Label= labelResource.resource_value;
                         //total available balance
                         dataObject.Result5= dataObject.Result3- dataObject.Result2;
+                        labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('AVAILABLE_BALANCE', dataObject.PageResources);
+                        dataObject.Result5Label= labelResource.resource_value;
                     }
                     dataObject.statusCode= STATUS_CODES.OK;
                 }  
@@ -79,12 +99,15 @@ async function GetSellerData(dataObject){
 } 
 
 async function GetAdminData(dataObject){
+    let labelResource= "";
     let myQuery= await My_SQL.runQuery(`SELECT COUNT(UserID) AS Records FROM Users 
             WHERE UserRole= ${CONSTANTS.roleId.Buyer} AND IsActive = ${CONSTANTS.Status.Active_Status}`);
     if (myQuery && myQuery.error == 0) {
         if(myQuery.data){
             //total buyers
             dataObject.Result1= myQuery.data[0].Records;
+            labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('BUYER_COUNT', dataObject.PageResources);
+            dataObject.Result1Label= labelResource.resource_value;
         }
         myQuery= await My_SQL.runQuery(`SELECT COUNT(UserID) AS Records FROM Users 
             WHERE UserRole= ${CONSTANTS.roleId.Seller} AND IsActive = ${CONSTANTS.Status.Active_Status}`);
@@ -92,6 +115,8 @@ async function GetAdminData(dataObject){
             if(myQuery.data){
                 //Total sellers
                 dataObject.Result2= myQuery.data[0].Records;
+                labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('SELLER_COUNT', dataObject.PageResources);
+                dataObject.Result2Label= labelResource.resource_value;
             }    
             myQuery= await My_SQL.runQuery(`SELECT SUM(C.PaymentAmount) AS Earnings  
             FROM UserPayments WHERE ToUserID= ${SINGLE_VALUE_CONSTANTS.RootUserId} AND PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'`);
@@ -99,6 +124,8 @@ async function GetAdminData(dataObject){
                 if(myQuery.data){
                     //total earnings or credit    
                     dataObject.Result3= myQuery.data[0].Earnings;
+                    labelResource = await COMMON_FUNCTIONS.getSingleResourceFromResources('TOTAL_EARNINGS', dataObject.PageResources);
+                    dataObject.Result3Label= labelResource.resource_value;
                 } 
             }
         }    
@@ -276,12 +303,18 @@ const GetUserDashboard = async(req, res, next) => {
         let dataObject = {
             statusCode: STATUS_CODES.DATA_RETRIEVAL_ERROR
         }
-        if(res.locals.roleId === Roles.SuperAdmin){
-            dataObject= await GetAdminData(dataObject);
-        } else if(res.locals.roleId == Roles.Buyer){
-            dataObject= await GetBuyerData(dataObject);
-        } else if(res.locals.roleId == Roles.Seller){
-            dataObject= await GetSellerData(dataObject);
+        if (res.locals.groupIds) {
+            let resources = await COMMON_CONTROLLER.getResources(res.locals.languageId, res.locals.groupIds);
+            if (resources.statusCode == STATUS_CODES.OK) {
+                dataObject.PageResources = resources.resources;
+                if(res.locals.roleId === Roles.SuperAdmin){
+                    dataObject= await GetAdminData(dataObject);
+                } else if(res.locals.roleId == Roles.Buyer){
+                    dataObject= await GetBuyerData(dataObject);
+                } else if(res.locals.roleId == Roles.Seller){
+                    dataObject= await GetSellerData(dataObject);
+                }
+            }
         }
         res.locals.statusCode = dataObject.statusCode;
         res.locals.dataObject = dataObject;

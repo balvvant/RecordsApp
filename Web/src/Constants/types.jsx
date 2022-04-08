@@ -204,7 +204,9 @@ export const resourceGroups = {
     USER_RECORDS_GROUP: 51,
     SUPPORT_TICKET_GROUP:52,
     COMMON_GROUP : 61,
-    INVITATION_CODES_GROUP : 63
+    INVITATION_CODES_GROUP : 63,
+    PAYMENT_AND_RECHARGE_GROUP : 64,
+    DASHOBOARD_GROUP : 65
 }
 
 export const DeckStatus = {
