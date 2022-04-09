@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router";
 import { LeftArrow } from '../Constants/svgIcons';
 import { changeBasketView, changeCategoryId, changeParentCategoryId, changeShowCategories, errorLogger, toggleMobileMenu, updateArchiveStatus, verifyRoute } from "../actions/commonActions";
-import { DashboardStatus, GLOBAL_API, ROLES, SEND_CONTENT_COMPONENT } from "../Constants/types";
+import { DashboardStatus, GLOBAL_API, ROLES, ROUTE_COMPONENTS } from "../Constants/types";
 import { getResourceValue } from '../Functions/CommonFunctions';
 
 const SidebarComponent = React.memo((props) => {
@@ -77,7 +77,7 @@ const SidebarComponent = React.memo((props) => {
             }
         }
         setSideBarList(tempSidebar);
-        changeCategoryId(0);
+        // changeCategoryId(0);
         changeParentCategoryId(tempSidebar && tempSidebar[0]?.parent_category_id ? tempSidebar[0].parent_category_id : 0);
     }
 
@@ -89,31 +89,43 @@ const SidebarComponent = React.memo((props) => {
                 updateArchiveStatus(false);
                 setMenuval(null);
             }
-            if (menu.component == SEND_CONTENT_COMPONENT) {
+            if (menu.component == ROUTE_COMPONENTS.SEND_CONTENT) {
                 changeShowCategories(true);
             }
             verifyRoute(history, menu.route_name);
         }
     };
 
+    const checkFooterisOpen = (parentId) => {
+        if(parentId){
+            if(history.location.pathname !=`/dashboard` && history.location.pathname != `/send-content`) {       
+                if(props.features?.findIndex(e => e.component == ROUTE_COMPONENTS.SEND_CONTENT) >= 0) {
+                    verifyRoute(history,`/send-content`)
+                }else {
+                    verifyRoute(history,`/dashboard`)
+                }
+            }
+        }
+    }
     const changeCategories = (parentId, childId) => {
         setParentCatId(parentId);
         changeParentCategoryId(parentId);
         changeCategoryId(childId > 0 ? childId : 0);
         changeBasketView(false);
+        
     }
 
     const OpenHomePage = () => {
-        verifyRoute(history, '/dashboard')
-        changeShowCategories(false)
+        changeShowCategories(false);
         changeBasketView(false);
+        verifyRoute(history, '/dashboard')
     }
 
     const leftMenuRow = (menu, index) => {
         return (
             <li
                 key={index}
-                className={`cursor ${menu.parent_category_id == props.parentCategoryId || menu.feature_id == props.featureID ? 'dropdown-wrapper active dropdown-open' : ''}  `}
+                className={`cursor ${(menu.parent_category_id > 0 && menu.parent_category_id == props.parentCategoryId) || menu.feature_id == props.featureID ? 'dropdown-wrapper active dropdown-open' : ''}  `}
             >
                 <>
                     {menu.child_menus ? (
@@ -172,7 +184,7 @@ const SidebarComponent = React.memo((props) => {
                                 }`}
                                 >
                                     <div
-                                        onClick={() => { openMenu(subMenu); changeCategories(menu.parent_category_id, subMenu.category_id) }}
+                                        onClick={() => { openMenu(subMenu); changeCategories(menu.parent_category_id, subMenu.category_id); checkFooterisOpen(menu.parent_category_id, subMenu.category_id)  }}
                                         className={`d-flex flex-wrap align-items-center submenu-inner-wrapper `}
                                     >
                                         <div className="sidebar-icon-wrapper">
@@ -208,7 +220,7 @@ const SidebarComponent = React.memo((props) => {
                                 <img src="/assets/img/cross.png" alt="icon" />
                             </div>
                             <ul className="list-unstyled sidebar-list-wrapper w-100">
-                                {props.showCategories && props.features?.findIndex(e => e.component == SEND_CONTENT_COMPONENT) >= 0 && <div onClick={() => OpenHomePage()} className=" cursor d-flex flex-wrap align-items-center menu-inner-wrapper content-category border-bottom">
+                                {props.showCategories && props.features?.findIndex(e => e.component == ROUTE_COMPONENTS.SEND_CONTENT) >= 0 && <div onClick={() => OpenHomePage()} className=" cursor d-flex flex-wrap align-items-center menu-inner-wrapper content-category border-bottom">
                                     <div className="list-txt-wrapper flex-1 font-18">
                                         <LeftArrow /> {getResourceValue(props.resources, 'AdminDashboard')}
                                     </div>

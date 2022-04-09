@@ -5,7 +5,7 @@ import format from "date-fns/format";
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, GLOBAL_API, PAGE_ENTRY_SIZE,CONSTANTS, resourceGroups } from "../Constants/types";
+import { API_METHODS, GLOBAL_API, PAGE_ENTRY_SIZE,CONSTANTS,STATUS_CODES, resourceGroups } from "../Constants/types";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 import { LeftArrow, RightArrow } from "../Constants/svgIcons";
 class Blogs extends Component {
@@ -61,7 +61,7 @@ class Blogs extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 this.setState({ adminResources: resources });
             }
@@ -98,7 +98,7 @@ class Blogs extends Component {
             }
             let articleResult = await CallApiAsync(obj);
 
-            if (articleResult.data.status === 200) {
+            if (articleResult.data.status === STATUS_CODES.OK) {
                 let count = articleResult.data.data.totalCount;
 
                 // if (count <= 0) {

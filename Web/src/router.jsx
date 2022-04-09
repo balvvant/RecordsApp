@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 //common component
 import NotFound from './Pages/notFound';
+import UnauthorizedError from "./Pages/UnauthorizedError";
 import SSOLogout from './Pages/ssoLogout';
 import ResetPassowrd from './Pages/resetPassword';
 import ActivateUser from './Pages/activateUser';
@@ -152,7 +153,7 @@ const Router = (props) => {
             />
           ) : null
         )}
-
+      <Route path="/unauthorized" component={UnauthorizedError} />
       <Route path="*" component={NotFound} />
     </Switch>
   );

@@ -5,7 +5,7 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, GLOBAL_API, ImageFileTypes, resourceFields, CONSTANTS, resourceGroups } from '../Constants/types';
+import { API_METHODS,STATUS_CODES, GLOBAL_API, ImageFileTypes, resourceFields, CONSTANTS, resourceGroups } from '../Constants/types';
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 import ImgViewerModal from '../Modals/imgViewerModal';
 
@@ -172,7 +172,7 @@ const AddEditWebsiteMenuModal = React.memo((props) => {
                     body: formData
                 }
                 let result = await CallApiAsync(obj);
-                if (result.data.status === 200) {
+                if (result.data.status === STATUS_CODES.OK) {
                     props.onCloseModal('success')
                     globalAlert('success', getResourceValue(props.resources, props.editMode ? 'MENU_UPDATED' : 'MENU_ADDED'))
                 } else {
@@ -190,7 +190,6 @@ const AddEditWebsiteMenuModal = React.memo((props) => {
                 globalLoader(false)
             }
         } catch (error) {
-            console.log('error: ', error);
             let errorObject = {
                 methodName: "addEditLanguage/saveData",
                 errorStake: error.toString(),
@@ -282,10 +281,7 @@ const AddEditWebsiteMenuModal = React.memo((props) => {
                             <div className="d-flex align-self-center" >
                                 <p className="login-txt mb-0 primary-color"> {props.editMode ? getResourceValue(props.resources, 'EDIT') : getResourceValue(props.resources, 'ADD_NEW_MENU')}</p>
                             </div>
-                            <div className="btn-wrapper">
-                                <button type="button" className="btn btn-own full-width-xs-mb btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
-                                <button type="button" onClick={saveData} className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100">{getResourceValue(props.resources, 'SAVE')}</button>
-                            </div>
+                            
                         </div>
 
                         <div className="content-container form-own add-list-form flex-wrap cpl-10 cpr-10 cpt-10 cpb-10" >
@@ -425,6 +421,10 @@ const AddEditWebsiteMenuModal = React.memo((props) => {
                                 </div>
                             </div>
                         </div>
+                        <div className="btn-wrapper d-flex justify-content-end cpt-10">
+                                <button type="button" className="btn btn-own full-width-xs-mb btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
+                                <button type="button" onClick={saveData} className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100">{getResourceValue(props.resources, 'SAVE')}</button>
+                            </div>
                     </div>
                 </form>
             </Modal >

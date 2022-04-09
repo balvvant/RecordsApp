@@ -4,7 +4,7 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader, updateLanguageList } from '../actions/commonActions';
-import { API_METHODS, BUTTON_TYPES,CONSTANTS, resourceGroups } from "../Constants/types";
+import { API_METHODS, BUTTON_TYPES,STATUS_CODES,CONSTANTS, resourceGroups } from "../Constants/types";
 import AddEditLanguageModal from '../Modals/AddEditLanguageModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
@@ -65,7 +65,7 @@ class Languages extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
 
                 let columns = [
@@ -121,7 +121,7 @@ class Languages extends Component {
             }
             let languageResult = await CallApiAsync(obj);
 
-            if (languageResult.data.status === 200) {
+            if (languageResult.data.status === STATUS_CODES.OK) {
                 let count = languageResult.data.data.totalCount;
 
                 // if (count > 0) {
@@ -181,7 +181,7 @@ class Languages extends Component {
 
             let languageResult = await CallApiAsync(obj);
 
-            if (languageResult.data.status === 200) {
+            if (languageResult.data.status === STATUS_CODES.OK) {
                 // globalAlert("success", languageResult.data.status.toString());
 
                 let index = this.state.dataArray.findIndex(e => e.language_id == languageId);
@@ -218,7 +218,7 @@ class Languages extends Component {
                         language_id: defaultLangValue.language_id
                     }}
                     let defaultLanguageResult = await CallApiAsync(obj);
-                    if (defaultLanguageResult.data.status === 200) {
+                    if (defaultLanguageResult.data.status === STATUS_CODES.OK) {
                         this.viewUserApi()
                     }
                     else {

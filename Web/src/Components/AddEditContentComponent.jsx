@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader, verifyRoute } from '../actions/commonActions';
-import { API_METHODS, AttachmentFileTypes, CONTENT_FILE_TYPE, CONTENT_TYPE, GLOBAL_API, ImageFileTypes, resourceFields, resourceGroups, RESOURCE_KEYS,CONSTANTS, VideoFileTypes } from '../Constants/types';
+import { API_METHODS, AttachmentFileTypes, CONTENT_FILE_TYPE, CONTENT_TYPE, GLOBAL_API, ImageFileTypes, resourceFields, resourceGroups, RESOURCE_KEYS,CONSTANTS, VideoFileTypes ,STATUS_CODES} from '../Constants/types';
 import { DragIcon, ImageIcon,  PreviewIcon, LockIcon, PDFIcon, PlusIcon, TrashIcon, UnlockIcon, VideoIcon } from '../Constants/svgIcons';
 import { CallApiAsync, getDropdownValues, getResourceValue } from '../Functions/CommonFunctions';
 import ImgViewerModal from '../Modals/imgViewerModal';
@@ -1605,26 +1605,27 @@ class AddEditContentComponent extends React.PureComponent {
                             } />)
                     })
                 }
-                 {this.state.imgPreview && 
-                  <Modal classNames={{ modal: "modal-lg modal-own" }} open={this.state.imgPreview} onClose={() => this.setState({imgPreview:false})} center showCloseIcon={true} closeOnOverlayClick={true}>
-                     <div className='d-flex flex-wrap align-items-center justify-content-center preview-margin'>            
-                         <img style={{ width: "calc(100% - 30px)" }} src={this.state.selectedImage} />
-                    </div>
-                 </Modal>}
-                 {this.state.videoPreview &&
-                    <Modal classNames={{ modal: "modal-lg modal-own" }} open={this.state.videoPreview} onClose={() => this.setState({videoPreview:false})} center showCloseIcon={true} closeOnOverlayClick={true}>
-                        <div className='d-flex flex-wrap align-items-center justify-content-center preview-margin'>            
-                        <Player playsInline >
-                            <source src={this.state.selectedVideo} />
-                            {console.log(this.state.selectedVideo)}
-                            <ControlBar>
-                                <ReplayControl seconds={10} order={1.1} />
-                                <ForwardControl seconds={10} order={1.2} />
-                                <CurrentTimeDisplay order={4.1} />
-                                <TimeDivider order={4.2} />
-                                <PlaybackRateMenuButton rates={[5, 2, 1, 0.5, 0.1]} order={7.1} />
-                            </ControlBar>
-                        </Player>
+                {this.state.imgPreview &&
+                    <Modal classNames={{ modal: "modal-lg-full  modal-own p-0 modal-patient modalPad" }} open={this.state.imgPreview} onClose={() => this.setState({ imgPreview: false })} center showCloseIcon={true} closeOnOverlayClick={true}>
+                        <ContentPreviewComponent
+                            imgPrevPath={this.state.selectedImage}
+                            imgPrevFile={this.state.imgPrevFile}
+                            singleImgView={true}
+                        />
+                    </Modal>}
+                {this.state.videoPreview &&
+                    <Modal classNames={{ modal: "modal-lg modal-own" }} open={this.state.videoPreview} onClose={() => this.setState({ videoPreview: false })} center showCloseIcon={true} closeOnOverlayClick={true}>
+                        <div className='d-flex flex-wrap align-items-center justify-content-center preview-margin'>
+                            <Player playsInline >
+                                <source src={this.state.selectedVideo} />
+                                <ControlBar>
+                                    <ReplayControl seconds={10} order={1.1} />
+                                    <ForwardControl seconds={10} order={1.2} />
+                                    <CurrentTimeDisplay order={4.1} />
+                                    <TimeDivider order={4.2} />
+                                    <PlaybackRateMenuButton rates={[5, 2, 1, 0.5, 0.1]} order={7.1} />
+                                </ControlBar>
+                            </Player>
                         </div>
                     </Modal>
                     }

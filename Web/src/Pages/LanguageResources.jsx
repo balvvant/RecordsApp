@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, BUTTON_TYPES,CONSTANTS, GLOBAL_API, ResourceExportType, resourceGroups } from "../Constants/types";
+import { API_METHODS, BUTTON_TYPES,CONSTANTS,STATUS_CODES, GLOBAL_API, ResourceExportType, resourceGroups } from "../Constants/types";
 import AddLanguageResourceModal from '../Modals/addLanguageResourceModal';
 import BulkUploadResource from '../Modals/bulkUploadModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
@@ -61,7 +61,7 @@ class LanguageResources extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
 
                 let columns = [
@@ -112,7 +112,7 @@ class LanguageResources extends Component {
             }
             let Result = await CallApiAsync(obj);
 
-            if (Result.data.status === 200) {
+            if (Result.data.status === STATUS_CODES.OK) {
                 let count = Result.data.data.totalCount;
 
                 if (count <= 0) {
@@ -166,7 +166,7 @@ class LanguageResources extends Component {
             }
             let Result = await CallApiAsync(obj);
 
-            if (Result.data.status === 200) {
+            if (Result.data.status === STATUS_CODES.OK) {
                 let filePath = Result.data.data.export_file;
 
                 if (filePath) {

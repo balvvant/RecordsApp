@@ -146,6 +146,9 @@ export const STATUS_CODES = {
     OK: 200,
     TOKEN_EXPIRED: 5000,
     UNAUTHORIZED: 401,
+    VALIDATION_ERROR: 5006,
+    EXCEL_FILE_MISSING: 5013,
+    NHS_NOT_AVAILABLE: 5023
 } 
 
 
@@ -475,16 +478,10 @@ export const USER_STATUS = {
     ACTIVATED: 2
 }
 
-export const INVITATION_CODE_FOR = {
-    Buyer: 'Buyer',
-    Seller: 'Seller'
+export const ROUTE_COMPONENTS = {
+    PATIENT_OPT_OUT: "PatientDeleteAccount",
+    SWITCH_ORGANIZATION: "SwitchOrganization",
+    SEND_CONTENT: "SendContent",
+    CLINICIAN_DASHBOARD: "ClinicianDashboard",
+    ADMIN_DASHBOARD: "AdminDashboard"
 }
-
-export const SINGLE_VALUES = {
-    PAGE_SIZE : 25,
-}
-
-
-export const PATIENT_OPT_OUT_COMPONENT = "PatientDeleteAccount";
-export const CLINICIAN_SWITCH_ORGANIZATION_COMPONENT = "SwitchOrganization";
-export const SEND_CONTENT_COMPONENT = "SendContent";

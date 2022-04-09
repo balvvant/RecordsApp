@@ -5,7 +5,7 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { CONSTANTS,API_METHODS } from '../Constants/types';
+import { CONSTANTS,STATUS_CODES,API_METHODS } from '../Constants/types';
 import TextEditor from "../Components/TextEditorComponent";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
@@ -65,7 +65,7 @@ const AddEditStaticPageModal = React.memo((props) => {
                     api:'/save-static-page',
                     body:formData}
                 let result = await CallApiAsync(obj);
-                if (result?.data.status === 200) {
+                if (result?.data.status === STATUS_CODES.OK) {
                     props.onCloseModal('success');
                     globalAlert('success', getResourceValue(props.resources, props.editMode > 0 ? "MENU_UPDATED" : "MENU_ADDED"));
                 } else {
@@ -125,7 +125,7 @@ const AddEditStaticPageModal = React.memo((props) => {
         setSelectedResource([]);
 
         let result = await CallApiAsync(obj);
-        if (result.data.status === 200) {
+        if (result.data.status === STATUS_CODES.OK) {
             if (result.data.data.resources) {
                 let languageResources = result.data.data.resources;
                 setupResourceData(languageResources);
@@ -154,17 +154,13 @@ const AddEditStaticPageModal = React.memo((props) => {
     }
 
     return (
-        <Modal classNames={{ modal: "modal-lg-full modal-own" }} open={props.open} onClose={() => props.onCloseModal()} center showCloseIcon={false} closeOnOverlayClick={false} >
+        <Modal classNames={{ modal: "content-modal-lg modal-own" }} open={props.open} onClose={() => props.onCloseModal()} center showCloseIcon={false} closeOnOverlayClick={false} >
             <form className="form-own" noValidate autoComplete="off" onSubmit={(ev) => ev.preventDefault()}>
                 <div className="">
-                    <div className="row d-flex justify-content-between pb-3 m-0" >
+                    <div className="row d-flex justify-content-between pb-2 m-0 contentHeadSec" >
                         <div className="d-flex align-self-center" >
                             <p className="login-txt mb-0 primary-color"> {props.editMode ? getResourceValue(props.resources, 'EDIT') : getResourceValue(props.resources, 'ADD_NEW_PAGE')}</p>
-                        </div>
-                        <div className="btn-wrapper">
-                            <button type="button" className="btn btn-own full-width-xs-mb btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
-                            <button type="button" onClick={saveData} className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100">{getResourceValue(props.resources, 'SAVE')}</button>
-                        </div>
+                        </div>  
                     </div>
 
                     <div className="content-container form-own add-list-form flex-wrap cpl-10 cpr-10 cpt-10 cpb-10" >
@@ -223,6 +219,10 @@ const AddEditStaticPageModal = React.memo((props) => {
                             ))
                         }
                     </div>
+                    <div className="btn-wrapper d-flex justify-content-end cpt-10">
+                            <button type="button" className="btn btn-own full-width-xs-mb btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
+                            <button type="button" onClick={saveData} className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100">{getResourceValue(props.resources, 'SAVE')}</button>
+                        </div>
                 </div>
             </form>
         </Modal >

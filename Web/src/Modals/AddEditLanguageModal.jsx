@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { CONSTANTS,API_METHODS } from '../Constants/types';
+import { CONSTANTS,STATUS_CODES,API_METHODS } from '../Constants/types';
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
 const AddEditLanguageModal = React.memo((props) => {
@@ -53,7 +53,7 @@ const AddEditLanguageModal = React.memo((props) => {
                     result = await CallApiAsync(obj);
                 }
 
-                if (result.data.status === 200) {
+                if (result.data.status === STATUS_CODES.OK) {
                     props.onCloseModal('success')
                     globalAlert('success', getResourceValue(props.resources, "LANGUAGE_SAVED"));
                 } else{
@@ -152,7 +152,7 @@ const AddEditLanguageModal = React.memo((props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="btn-wrapper cpt-10">
+                    <div className="btn-wrapper cpt-10 d-flex justify-content-end">
                         <button type="button" className="btn btn-own full-width-xs-mb btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
                         <button type="button" onClick={saveData} className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100">{getResourceValue(props.resources, 'SAVE')}</button>
                     </div>

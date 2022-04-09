@@ -4,7 +4,7 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import * as XLSX from 'xlsx';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, FILE_EXTANSION_TYPE, RESOURCE_KEYS } from '../Constants/types';
+import { API_METHODS, CONSTANTS, FILE_EXTANSION_TYPE, RESOURCE_KEYS ,STATUS_CODES} from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField } from '../Functions/CommonFunctions';
 
 let templateHeader = {
@@ -40,10 +40,10 @@ const BulkUploadRecordsModal = React.memo((props) => {
                             if (await ValidateExcelData(fileRecords)) {
                                 setExcelFileName(excelFile.name);
                             } else {
-                                globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, RESOURCE_KEYS.ERROR_CODES.VALIDATION_ERROR));
+                                globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, STATUS_CODES.VALIDATION_ERROR));
                             }
                         } else {
-                            globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, RESOURCE_KEYS.ERROR_CODES.EXCEL_FILE_MISSING));
+                            globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, STATUS_CODES.EXCEL_FILE_MISSING));
                         }
                     };
                     reader.readAsBinaryString(excelFile)
@@ -144,7 +144,7 @@ const BulkUploadRecordsModal = React.memo((props) => {
                     }
                 }
                 let recordResult = await CallApiAsync(obj);
-                if (recordResult.data.status === 200) {
+                if (recordResult.data.status === STATUS_CODES.OK) {
                         setUploadStatus(true);
                         setRecordFailed(recordResult.data.data.records.length - recordResult.data.data.successCount);
                         setRecordSuccess(recordResult.data.data.successCount);

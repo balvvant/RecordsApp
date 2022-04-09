@@ -1,7 +1,9 @@
 import Axios from "axios";
 import platform from "platform";
-import { changeBasketView, changeCategoryId, changeContentBasket, changeFeatureId, changeFeatures, changeOpenComponent, changeOrgId, changeParentCategoryId, changeRoleKey, changeRoutes, changeShowCategories, changeViewType, errorLogger, getTokenStatus, globalAlert, globalLoader, logoutUser, operationList, resetTokenApi, setUserDetail, showBasket, showLanguage, updateLanguageId, verifyRoute } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, CONTENT_VIEW_TYPES, GLOBAL_API, resourceFields, RESOURCE_KEYS, STATUS_CODES, TokenStatusValues, VALIDATION_FIELD_TYPES, CUSTOM_RESOURCES } from '../Constants/types';
+import { changeBasketView, changeCategoryId, changeContentBasket, changeFeatureId, changeFeatures, changeOpenComponent, changeOrgId, changeParentCategoryId, changeRoleKey, changeRoutes, changeShowCategories, changeViewType, errorLogger, getTokenStatus, globalAlert, globalLoader, logoutUser, operationList, resetTokenApi, setUserDetail, showBasket, showLanguage, updateLanguageId, verifyRoute, setSsoUserDetail } from '../actions/commonActions';
+import { API_METHODS, CONSTANTS, CONTENT_VIEW_TYPES, GLOBAL_API, resourceFields, RESOURCE_KEYS, STATUS_CODES, TokenStatusValues, VALIDATION_FIELD_TYPES, CUSTOM_RESOURCES, PRIMARY_COLOR, PRIMARY_FONT_COLOR } from '../Constants/types';
+import UnauthorizedError from "../Pages/UnauthorizedError";
+import React from 'react'
 
 export const logOut = async (value, link) => {
 
@@ -10,10 +12,10 @@ export const logOut = async (value, link) => {
     let isSSOUser = localStorage.getItem('isSSOUser');
 
     if (token && tokenStatus !== TokenStatusValues.EXPIRED) {
-        let logoutUserResult = await logoutUser(value,link);
+        let logoutUserResult = await logoutUser(value, link);
 
         if (logoutUserResult) {
-            if (logoutUserResult?.data.status == 200) {
+            if (logoutUserResult?.data.status == STATUS_CODES.OK) {
                 // globalAlert('success', global.logoutMessage);
                 changeOpenComponent(false)
                 setUserDetail({});
@@ -51,6 +53,8 @@ export const logOut = async (value, link) => {
         }
         clearStorage();
     }
+    document.body.style.setProperty('--primary-color', PRIMARY_COLOR);
+    document.body.style.setProperty('--primary-font-color', PRIMARY_FONT_COLOR);
 }
 
 export const clearSSOUser = async (value, link) => {
@@ -90,7 +94,7 @@ export const clearStorage = () => {
     localStorage.removeItem('roleKey');
     localStorage.removeItem('featureId');
     localStorage.removeItem('showLanguage');
-    
+
     changeFeatures([]);
     setUserDetail({});
     changeRoutes([]);
@@ -178,8 +182,6 @@ export const getSingleResource = (resourceData, key) => {
     return resource;
 }
 
-
-
 /**
  * Get dropdown items from resources
  * @param groupId 
@@ -262,7 +264,7 @@ export const sessionSetup = async (data, history) => {
     } else {
         verifyRoute(history, `/dashboard`);
     }
-    
+
 
     localStorage.removeItem('isLockout');
     localStorage.removeItem('endTime');
@@ -287,7 +289,7 @@ export const CallApiAsync = async (obj) => {
         let token = localStorage.getItem("token");
         let proceedApi = false;
         let header = {};
-        if(token){
+        if (token) {
             proceedApi = await getTokenStatus(obj.history, '/');
         }
         header = await httpHeaderOwn(obj.history, '/');
@@ -298,7 +300,7 @@ export const CallApiAsync = async (obj) => {
                 headers: { ...header, ...obj.header ? obj.header : {} },
                 data: obj.method == API_METHODS.POST ? obj.body : {}
             }).then(async res => {
-                if(token){
+                if (token) {
                     if (res.data.status == STATUS_CODES.TOKEN_EXPIRED) {
                         let resetToken = await resetTokenApi(obj.history, '/');
                         if (resetToken) {
@@ -306,12 +308,13 @@ export const CallApiAsync = async (obj) => {
                         }
                     }
                 }
-                // if(res.data.status == STATUS_CODES.UNAUTHORIZED) {
-                //     //redirect to error page
-                // } else {
-                //     return res;
-                // }
-                return res;
+                if (res.data.status == STATUS_CODES.UNAUTHORIZED) {
+                    globalLoader(false);
+                    //logOut(obj.history, '/');
+                    obj.history.push(`/unauthorized`);
+                } else {
+                    return res;
+                }
             }).catch(err => {
             })
         }
@@ -319,7 +322,7 @@ export const CallApiAsync = async (obj) => {
         let errorObject = {
             methodName: "commonFunction/CallApiAsync",
             errorStake: error.toString(),
-            history:this.props.history,
+            history: this.props.history,
         };
         errorLogger(errorObject);
     }
@@ -334,60 +337,65 @@ export const CallApiAsync = async (obj) => {
 export const ValidateField = (resources, resourceKey, fieldValue) => {
     let validateResult = {
         error: false,
-        message: ''
+        message: '',
+        key: ''
     }
     let resource = getSingleResource(resources, resourceKey);
     if (resource) {
         if (resource.field_type == VALIDATION_FIELD_TYPES.TEXT) {
-            return ValidateTextField(resources, resource, fieldValue, validateResult);
-        } else if (resource.field_type == VALIDATION_FIELD_TYPES.NUMERIC || resource.FieldType == VALIDATION_FIELD_TYPES.INTEGER) {
-            return ValidateNumberField(resources, resource, fieldValue, validateResult);
+            return ValidateTextField( resource, fieldValue, validateResult);
+        } else if (resource.field_type == VALIDATION_FIELD_TYPES.NUMERIC || resource.field_type == VALIDATION_FIELD_TYPES.INTEGER) {
+            return ValidateNumberField(resource, fieldValue, validateResult);
         } else if (resource.field_type == VALIDATION_FIELD_TYPES.DATE) {
-            return ValidateDateField(resources, resource, fieldValue, validateResult);
+            return ValidateDateField( resource, fieldValue, validateResult);
         }
     }
     validateResult.error = true;
     return validateResult;
 }
 
-const ValidateTextField = (resources, resource, fieldValue, validateResult) => {
+const ValidateTextField = ( resource, fieldValue, validateResult) => {
     if (fieldValue && fieldValue.trim() != "" && resource.min_length >= 0 && resource.max_length > 0) {
         if (fieldValue.length < resource.min_length || fieldValue.length > resource.max_length) {
             validateResult.error = true;
-            validateResult.message = getResourceValue(resources, RESOURCE_KEYS.COMMON.FIELD_LIMIT).replace(CONSTANTS.MIN_LENGTH, resource.min_length).replace(CONSTANTS.MAX_LENGTH, resource.max_length);
+            validateResult.message = RESOURCE_KEYS.COMMON.FIELD_LIMIT;
         }
     } else if (resource.is_required) {
         validateResult.error = true;
-        validateResult.message = getResourceValue(resources, RESOURCE_KEYS.COMMON.FIELD_REQUIRED);
+        validateResult.message = RESOURCE_KEYS.COMMON.FIELD_REQUIRED;
     }
+    validateResult.resource = resource;
     return validateResult;
 }
 
-const ValidateNumberField = (resources, resource, fieldValue, validateResult) => {
+const ValidateNumberField = (resource, fieldValue, validateResult) => {
     if (fieldValue) {
-        if (fieldValue < resource.min_length || fieldValue > resource.max_length) {
+        if(isNaN(fieldValue)){
             validateResult.error = true;
-            validateResult.message = getResourceValue(resources, RESOURCE_KEYS.COMMON.FIELD_LIMIT).replace(CONSTANTS.MIN_LENGTH, resource.min_length).replace(CONSTANTS.MAX_LENGTH, resource.max_length);
+            validateResult.message = RESOURCE_KEYS.COMMON.FIELD_INVALID;
+        }
+        else {
+            if(fieldValue.toString().length < resource.min_length || fieldValue.toString().length > resource.max_length) {
+                validateResult.error = true;
+                validateResult.message = RESOURCE_KEYS.COMMON.FIELD_LIMIT;
+            }
         }
     } else if (resource.is_required) {
         validateResult.error = true;
-        validateResult.message = getResourceValue(resources, RESOURCE_KEYS.COMMON.FIELD_REQUIRED);
+        validateResult.message = RESOURCE_KEYS.COMMON.FIELD_REQUIRED;
     }
+    validateResult.resource = resource;
     return validateResult;
 }
 
-const ValidateDateField = (resources, resource, fieldValue, validateResult) => {
+const ValidateDateField = ( resource, fieldValue, validateResult) => {
     if (fieldValue && new Date(fieldValue)) {
-        let minDate = AddDaysToDate(resource.min_length);
-        let maxDate = AddDaysToDate(resource.max_length);
-        if (CompareDates(new Date(fieldValue), minDate, maxDate)) {
-            validateResult.error = true;
-            validateResult.message = getResourceValue(resources, RESOURCE_KEYS.COMMON.FIELD_LIMIT).replace(CONSTANTS.MIN_LENGTH, resource.min_length).replace(CONSTANTS.MAX_LENGTH, resource.max_length);
-        }
+        
     } else if (resource.is_required) {
         validateResult.error = true;
-        validateResult.message = getResourceValue(resources, RESOURCE_KEYS.COMMON.FIELD_REQUIRED);
+        validateResult.message = RESOURCE_KEYS.COMMON.FIELD_REQUIRED
     }
+    validateResult.resource = resource;
     return validateResult;
 }
 
@@ -413,14 +421,14 @@ export const getOrg = () => {
 }
 
 export const CheckPermission = (operationList = [], operationKey) => {
-    if(operationList && operationList.length > 0){
+    if (operationList && operationList.length > 0) {
         let operation = operationList.find(e => e.component == operationKey);
-        if(operation){
+        if (operation) {
             return true;
         } else {
             return false;
         }
     } else {
         return false;
-    }   
+    }
 }

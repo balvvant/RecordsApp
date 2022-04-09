@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import {CONSTANTS, API_METHODS } from '../Constants/types';
+import {CONSTANTS,STATUS_CODES, API_METHODS } from '../Constants/types';
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
 class staticPage extends Component {
@@ -39,7 +39,7 @@ class staticPage extends Component {
                     resource_key: this.state.resource_key
                 }}
                 let result = await CallApiAsync(obj);
-                if (result.data.status === 200) {
+                if (result.data.status === STATUS_CODES.OK) {
                     this.setState({ resource: result.data.data.resource }, () => this.setState({ reRender: !this.state.reRender }));
                 } else {
                     globalAlert(CONSTANTS.ERROR, getResourceValue(this.state.resource, result.data.status.toString()));

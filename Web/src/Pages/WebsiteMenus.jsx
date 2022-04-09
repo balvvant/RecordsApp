@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, BUTTON_TYPES, CONSTANTS,resourceGroups } from "../Constants/types";
+import { API_METHODS, BUTTON_TYPES, CONSTANTS,STATUS_CODES,resourceGroups } from "../Constants/types";
 import AddEditStaticPageModal from '../Modals/AddEditStaticPageModal';
 import AddEditWebsiteMenuModal from '../Modals/AddEditWebsiteMenuModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
@@ -68,7 +68,7 @@ class WebsiteMenus extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 this.setState({ adminResources: resources });
             }
@@ -133,7 +133,7 @@ class WebsiteMenus extends Component {
             }
             let menuResult = await CallApiAsync(obj);
 
-            if (menuResult.data.status === 200) {
+            if (menuResult.data.status === STATUS_CODES.OK) {
                 let count = menuResult.data.data.totalCount;
                 this.setState({
                     dataArray: menuResult.data.data.webMenus,
@@ -177,7 +177,7 @@ class WebsiteMenus extends Component {
                 }
             }
             let menuResult = await CallApiAsync(obj);
-            if (menuResult.data.status === 200) {
+            if (menuResult.data.status === STATUS_CODES.OK) {
                 let count = menuResult.data.data.totalCount;
 
                 this.setState({

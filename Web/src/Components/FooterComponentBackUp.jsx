@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-scroll';
 import { changeCurrentSidebarSubMenu, changeOldResourceKey, changeOrgId, changeResourceKey, changeTheScreen, verifyRoute } from '../actions/commonActions';
-import { PRIMARY_COLOR, PRIMARY_FONT_COLOR, RESOURCE_KEYS, SCREENS } from '../actionsTypes/types';
+import { PRIMARY_COLOR, PRIMARY_FONT_COLOR, RESOURCE_KEYS, SCREENS } from '../Constants/types';
 import { clearSSOUser } from '../_shared/commonFunction';
 
 class FooterComponent extends Component {

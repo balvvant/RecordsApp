@@ -11,7 +11,7 @@ import "slick-carousel/slick/slick.css";
 import { ControlBar, CurrentTimeDisplay, ForwardControl, PlaybackRateMenuButton, Player, ReplayControl, TimeDivider } from "video-react";
 import "video-react/dist/video-react.css";
 import { errorLogger, globalAlert, globalLoader } from "../actions/commonActions";
-import { API_METHODS, GLOBAL_API, CONSTANTS, PATIENT_CONTENT_TYPES } from "../Constants/types";
+import { API_METHODS, GLOBAL_API,STATUS_CODES, CONSTANTS, PATIENT_CONTENT_TYPES } from "../Constants/types";
 import { ImageIcon, PDFIcon, DECKIcon, URLIcon, VideoIcon } from "../Constants/svgIcons";
 import ContentPreviewComponent from '../Components/ContentPreviewComponent';
 import { CallApiAsync, getResourceValue } from "../Functions/CommonFunctions";
@@ -64,7 +64,7 @@ class PatientRecords extends React.Component {
             };
             let apiRes = await CallApiAsync(obj);
 
-            if (apiRes && apiRes.data.status === 200) {
+            if (apiRes && apiRes.data.status === STATUS_CODES.OK) {
                 if (apiRes.data.data?.attachments.length > 0) {
                     let attachment = apiRes.data.data?.attachments[0];
                     let viewType = attachment.file_type;
@@ -112,7 +112,6 @@ class PatientRecords extends React.Component {
                 onDownloadProgress: (progressEvent) => {
                      percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                      this.setState({percentage:percentage});
-                     console.log(this.state.percentage)
                 }
             })
                 .then((res) => {
@@ -317,7 +316,7 @@ class PatientRecords extends React.Component {
     render() {
         const { attachments, attachment, isLoaded } = this.state;
         return (
-            <Modal classNames={{ modal: "modal-lg-full  modal-own p-0 modal-patient" }} onClose={() => this.sendPatientVisit(null, null)} open={this.props.openEditUserModal}
+            <Modal classNames={{ modal: "modal-lg-full  modal-own p-0 modal-patient modalPad" }} onClose={() => this.sendPatientVisit(null, null)} open={this.props.openEditUserModal}
                 center closeOnOverlayClick={false}>
                 <>
                     <div className="row d-flex justify-content-between cpl-10 cpr-10 cpb-10 cpt-10 m-0 attach-mod-hd" >
@@ -343,6 +342,7 @@ class PatientRecords extends React.Component {
                             contentFiles={attachment.content_files}
                             attachments={attachments}
                             attachment={attachment}
+                            patientRecord={true}
                             {...this.props} />
                     }
 

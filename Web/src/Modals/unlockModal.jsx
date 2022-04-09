@@ -29,7 +29,7 @@ const UnlockModal = React.memo((props) => {
                 }
 
                 value = await CallApiAsync(obj);
-                if (value.data.status === 200) {
+                if (value.data.status === STATUS_CODES.OK) {
                     globalAlert('success', getResourceValue(props.resources, value.data.status.toString()))
                     globalLoader(false)
                     props.onCloseModal(false)

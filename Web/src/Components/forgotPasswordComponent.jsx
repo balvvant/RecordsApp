@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { changeTheScreen, errorLogger, globalAlert, globalLoader, storeResetParam } from '../actions/commonActions';
-import { API_METHODS, resourceFields,CONSTANTS, SCREENS, resourceGroups } from '../Constants/types';
+import { API_METHODS,STATUS_CODES, resourceFields,CONSTANTS, SCREENS, resourceGroups } from '../Constants/types';
 import { CallApiAsync, getResourceValue, validEmail } from '../Functions/CommonFunctions';
 
 
@@ -85,7 +85,7 @@ class ForgotPasswordComponent extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 this.setState({ forgotPasswordResources: resources });
 
@@ -131,7 +131,7 @@ class ForgotPasswordComponent extends Component {
                     }
                 }
                 let apiRes = await CallApiAsync(obj);
-                if (apiRes && apiRes.data.status === 200) {
+                if (apiRes && apiRes.data.status === STATUS_CODES.OK) {
                     globalAlert('success', getResourceValue(this.state.forgotPasswordResources, 'OTP_SUCCESS'));
                     this.setState({
                         hideOpt: true,

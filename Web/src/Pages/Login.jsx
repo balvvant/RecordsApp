@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { changeCurrentSidebarSubMenu, changeOpenComponent, changeOrgId, changeResourceKey, changeTheScreen, errorLogger, globalAlert, globalLoader, updateLanguageList, verifyRoute } from '../actions/commonActions';
-import { API_METHODS, defaultLanguage, PRIMARY_COLOR, PRIMARY_FONT_COLOR, resourceFields, resourceGroups, RESOURCE_KEYS,CONSTANTS, SCREENS } from '../Constants/types';
+import { API_METHODS, defaultLanguage, PRIMARY_COLOR, PRIMARY_FONT_COLOR, resourceFields, resourceGroups, RESOURCE_KEYS,CONSTANTS, SCREENS ,STATUS_CODES } from '../Constants/types';
 import { CallApiAsync, clearSSOUser, getResourceValue, sessionSetup, validEmail } from '../Functions/CommonFunctions';
 
 class Login extends Component {
@@ -100,7 +100,7 @@ class Login extends Component {
                 }
             }
             let resourcesResult = await CallApiAsync(obj);
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 let languages = resourcesResult.data.data.languages;
                 this.setState({ loginResources: resources });
@@ -154,7 +154,7 @@ class Login extends Component {
                     }
                 }
                 let result = await CallApiAsync(obj);
-                if (result.data?.status === 200) {
+                if (result.data?.status === STATUS_CODES.OK) {
                     if (result?.data?.data?.userInfo) {
                         changeOpenComponent(false);
                         await sessionSetup(result?.data?.data, this.props.history);

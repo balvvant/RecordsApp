@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-scroll';
 import { changeBasketView, changeCategoryId, changeCurrentSidebarSubMenu, changeOpenComponent, changeOrgId, changeParentCategoryId, changeShowCategories, verifyRoute } from '../actions/commonActions';
-import { GLOBAL_API, HEADR_MENU, PRIMARY_COLOR, PRIMARY_FONT_COLOR, ROLES, SCREENS, PATIENT_OPT_OUT_COMPONENT, CLINICIAN_SWITCH_ORGANIZATION_COMPONENT } from '../Constants/types';
+import { GLOBAL_API, HEADR_MENU, PRIMARY_COLOR, PRIMARY_FONT_COLOR, ROLES, SCREENS, PATIENT_OPT_OUT_COMPONENT, CLINICIAN_SWITCH_ORGANIZATION_COMPONENT,ROUTE_COMPONENTS } from '../Constants/types';
 import LogoutModal from '../Modals/logoutModal';
 import { getResourceValue } from '../Functions/CommonFunctions';
 import { BasketIcon } from "../Constants/svgIcons";
@@ -21,6 +21,7 @@ class HeaderComponent extends Component {
             // isDropdown: true
             logoutModal: false,
             basketCount: 0,
+            orgLogo: props.orgId?.brand_logo
         }
     }
     componentDidMount = () => {
@@ -43,6 +44,9 @@ class HeaderComponent extends Component {
         }
         if (this.props.contentBaskets.length != this.state.basketCount) {
             this.setState({ basketCount: this.props.contentBaskets.length });
+        }
+        if(this.props.orgId?.brand_logo != this.state.orgLogo) {
+            this.setState({ orgLogo: this.props.orgId?.brand_logo });
         }
     }
 
@@ -68,14 +72,25 @@ class HeaderComponent extends Component {
         changeBasketView(true);
     }
 
+    goToHeaderLink = (subHeader) => {
+        if(this.props.orgId) {
+            changeOpenComponent(false); 
+            verifyRoute(this.props.history, subHeader.route_name);
+        } else {
+            if (this.props.roleKey == ROLES.CLINICIAN) {
+                verifyRoute(this.props.history, `/organisations`);
+            }
+        }
+    }
+
     render() {
         return (
             <>
                 <div className="header-container landing-header-container" style={{ padding: this.state.token ? 0 : '' }}>
                     <div className="header-fix-strap" id="strapHeader" >
                         <nav className="navbar navbar-expand-md  navbar-light">
-                            <a className="navbar-brand" herf="/">
-                                <img className='cursor' src="/assets/img/logo.png" alt="logo" onClick={() => this.props.onClickLogo(false)} />
+                            <a className="navbar-brand" herf="/" style={{width: 200}}>
+                                <img className='cursor' src={this.state.token ? this.state.orgLogo ? `${GLOBAL_API}/${this.state.orgLogo}` : "/assets/img/default-logo.png" : "/assets/img/logo.png"} alt="logo" onClick={() => this.props.onClickLogo(false)} />
                             </a>
 
                             <button className="navbar-toggler nav-bar-tggl mw-100" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -155,25 +170,27 @@ class HeaderComponent extends Component {
                                                         <ul className="list-unstyled profile-dropdown-list mb-0">
                                                             {
                                                                 header.child_menus && header.child_menus.length > 0 && header.child_menus.map((subHeader, subIndex) => {
+                                                                    let showFlag = false;
+                                                                    if(subHeader.component == ROUTE_COMPONENTS.PATIENT_OPT_OUT) {
+                                                                        if(this.props?.optOutStatus == 1) {
+                                                                            showFlag = false;
+                                                                        } else {
+                                                                            showFlag = true;
+                                                                        }
+                                                                    } else if (subHeader.component == ROUTE_COMPONENTS.SWITCH_ORGANIZATION) {
+                                                                        if(this.props?.userDetail?.organizations?.length > 1) {
+                                                                            showFlag = true;
+                                                                        }
+                                                                    } else {
+                                                                        showFlag = true;
+                                                                    }
                                                                     return <>
                                                                         {
-                                                                            subHeader.component == PATIENT_OPT_OUT_COMPONENT ? 
-                                                                                this.props?.optOutStatus == 1 ? 
-                                                                                null : 
+                                                                            showFlag ? 
                                                                                 <li className="menu-list-txt">
-                                                                                    <Link to={`${subHeader.route_name}`} smooth={true} duration={1000} onClick={() => { changeOpenComponent(false); verifyRoute(this.props.history, subHeader.route_name) }} key={subIndex}><span className="landing-menu-text">{subHeader.label}</span></Link>
+                                                                                    <Link to={`${subHeader.route_name}`} smooth={true} duration={1000} onClick={() => this.goToHeaderLink(subHeader)} key={subIndex}><span className="landing-menu-text">{subHeader.label}</span></Link>
                                                                                 </li>
-                                                                            : 
-                                                                            subHeader.component == CLINICIAN_SWITCH_ORGANIZATION_COMPONENT ?
-                                                                                this.props?.userDetail?.organizations?.length > 1 ?
-                                                                                <li className="menu-list-txt">
-                                                                                    <Link to={`${subHeader.route_name}`} smooth={true} duration={1000} onClick={() => { changeOpenComponent(false); verifyRoute(this.props.history, subHeader.route_name) }} key={subIndex}><span className="landing-menu-text">{subHeader.label}</span></Link>
-                                                                                </li>
-                                                                                : null
-                                                                            :
-                                                                            <li className="menu-list-txt">
-                                                                                <Link to={`${subHeader.route_name}`} smooth={true} duration={1000} onClick={() => { changeOpenComponent(false); verifyRoute(this.props.history, subHeader.route_name) }} key={subIndex}><span className="landing-menu-text">{subHeader.label}</span></Link>
-                                                                            </li>
+                                                                            : null
                                                                             }
                                                                     </>
                                                                 })
@@ -217,7 +234,7 @@ class HeaderComponent extends Component {
 }
 
 const mapStateToProps = state => ({
-
+    orgId: state.user.orgId,
     openedScreen: state.screen.openedScreen,
     createUserData: state.screen.createUserData,
     resourceKey: state.screen.resourceKey,

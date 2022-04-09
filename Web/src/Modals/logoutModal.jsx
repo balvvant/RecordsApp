@@ -6,7 +6,7 @@ import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
 import { CallApiAsync, getResourceValue, logOut } from '../Functions/CommonFunctions';
-import { API_METHODS,CONSTANTS, resourceGroups } from '../Constants/types';
+import { API_METHODS,CONSTANTS,STATUS_CODES, resourceGroups } from '../Constants/types';
 
 class logoutModal extends React.PureComponent {
     constructor(props) {
@@ -45,7 +45,7 @@ class logoutModal extends React.PureComponent {
                 }
             }
             let resourcesResult = await CallApiAsync(obj);
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
 
                 this.setState({ resources: resources });

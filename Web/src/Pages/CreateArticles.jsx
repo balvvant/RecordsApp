@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS,CONSTANTS, BUTTON_TYPES, resourceGroups } from "../Constants/types";
+import { API_METHODS,STATUS_CODES,CONSTANTS, BUTTON_TYPES, resourceGroups } from "../Constants/types";
 import AddEditArticleModal from '../Modals/AddEditArticleModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
@@ -58,7 +58,7 @@ class CreateArticles extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 this.setState({ adminResources: resources });
             }
@@ -117,7 +117,7 @@ class CreateArticles extends Component {
                 }
             }
             let articleResult = await CallApiAsync(obj);
-            if (articleResult.data.status === 200) {
+            if (articleResult.data.status === STATUS_CODES.OK) {
                 let count = articleResult.data.data.totalCount;
 
                 let articlesData = [];

@@ -7,7 +7,7 @@ import {
     withRouter
 } from "react-router-dom";
 import { errorLogger, globalAlert, globalLoader, verifyRoute } from "../actions/commonActions";
-import { API_METHODS, CONSTANTS, BUTTON_TYPES, CONTENT_TYPE, resourceGroups } from "../Constants/types";
+import { API_METHODS, CONSTANTS, BUTTON_TYPES, CONTENT_TYPE, resourceGroups ,STATUS_CODES} from "../Constants/types";
 import AddEditContentComponent from "../Components/AddEditContentComponent";
 import AttachmentViewModal from "../Modals/AttachmentViewModal";
 import CustomTableComponent from "../Components/CustomTableComponent";
@@ -104,7 +104,7 @@ class Contents extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 this.setState({ adminResources: resources });
             } else {
@@ -171,7 +171,7 @@ class Contents extends Component {
             }
 
             let apiRes = await CallApiAsync(obj);
-            if (apiRes && apiRes.data.status === 200) {
+            if (apiRes && apiRes.data.status === STATUS_CODES.OK) {
                 let contents = [];
                 if (apiRes.data.data.contents && apiRes.data.data.contents.length > 0) {
                     for (let content of apiRes.data.data.contents) {
@@ -226,7 +226,7 @@ class Contents extends Component {
                 }
             };
             let apiRes = await CallApiAsync(obj);
-            if (apiRes && apiRes.data.status === 200) {
+            if (apiRes && apiRes.data.status === STATUS_CODES.OK) {
                 if (localTotalUserId.length == this.state.mediaDataArray.length) {
                     this.setState((prevState => ({ currentPage: prevState.currentPage - 1 })));
                 }
@@ -294,7 +294,7 @@ class Contents extends Component {
         }
         let apiRes = await CallApiAsync(obj);
         if (apiRes) {
-            if (apiRes.data.status === 200) {
+            if (apiRes.data.status === STATUS_CODES.OK) {
                 let data = apiRes.data.data.content;
                 if (data) {
                     if (data.content_type_key === CONTENT_TYPE.VIDEO) {
@@ -350,7 +350,7 @@ class Contents extends Component {
         }
         let apiRes = await CallApiAsync(obj);
         if (apiRes) {
-            if (apiRes.data.status === 200) {
+            if (apiRes.data.status === STATUS_CODES.OK) {
                 let data = apiRes.data.data.content;
                 this.setState({ editData: data }, () => { this.setState({ openEditModal: true }) });
             } else {

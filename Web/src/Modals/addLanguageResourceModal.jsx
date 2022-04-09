@@ -5,7 +5,7 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS,resourceFields } from '../Constants/types';
+import { API_METHODS, CONSTANTS,STATUS_CODES,resourceFields } from '../Constants/types';
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
 
@@ -67,7 +67,7 @@ const AddLanguageResourceModal = React.memo((props) => {
 
         let result = await CallApiAsync(obj);
 
-        if (result.data.status === 200) {
+        if (result.data.status === STATUS_CODES.OK) {
             // setResource
 
             let resources = [];
@@ -135,7 +135,7 @@ const AddLanguageResourceModal = React.memo((props) => {
                 }
                 let result = await CallApiAsync(obj);
 
-                if (result.data.status === 200) {
+                if (result.data.status === STATUS_CODES.OK) {
                     props.onCloseModal('success')
                     globalAlert('success', getResourceValue(props.resources, 'RESOURCE_UPDATED'));
                 } else {
@@ -200,10 +200,7 @@ const AddLanguageResourceModal = React.memo((props) => {
                         <p className="login-txt mb-0 primary-color">{getResourceValue(props.resources, 'EDIT')} {getResourceValue(props.resources, 'RESOURCE')}</p>
 
                     </div>
-                    <div className="btn-wrapper">
-                        <button type="button" className="btn full-width-xs-mb btn-own btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
-                        <button type="button" className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100" onClick={(ev) => saveData(ev)}  >{getResourceValue(props.resources, 'SAVE')}</button>
-                    </div>
+                    
                 </div>
 
                 <div className="row d-flex justify-content-between p-0   " >
@@ -279,7 +276,10 @@ const AddLanguageResourceModal = React.memo((props) => {
                         </div>
                     ))
                 }
-
+                <div className="btn-wrapper cpt-10 d-flex justify-content-end">
+                        <button type="button" className="btn full-width-xs-mb btn-own btn-own-grey min-height-btn min-width-btn-md mr-3 mw-100" onClick={() => props.onCloseModal()}>{getResourceValue(props.resources, 'CANCEL')}</button>
+                        <button type="button" className="btn full-width-xs btn-own btn-own-primary min-width-btn-md min-height-btn mw-100" onClick={(ev) => saveData(ev)}  >{getResourceValue(props.resources, 'SAVE')}</button>
+                    </div>
             </form >
         )
     };

@@ -5,7 +5,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-scroll';
 import { changeOldResourceKey, changeOpenComponent, changeResourceKey, changeTheScreen, errorLogger, globalAlert, globalLoader, updateLanguageId, updateLanguageList, verifyRoute, changeFeatures, changeHeaderContent } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, defaultLanguage, GLOBAL_API, PRIMARY_COLOR, PRIMARY_FONT_COLOR, resourceGroups, RESOURCE_KEYS, SCREENS, MENUS_TYPE, CUSTOM_RESOURCES, ACTIONS } from '../Constants/types';
+import { API_METHODS,STATUS_CODES, CONSTANTS, defaultLanguage, GLOBAL_API, PRIMARY_COLOR, PRIMARY_FONT_COLOR, resourceGroups, RESOURCE_KEYS, SCREENS, MENUS_TYPE, CUSTOM_RESOURCES, ACTIONS } from '../Constants/types';
 import Blogs from '../Pages/blogs';
 import ForgotPassword from '../Pages/forgotPaasword';
 import Login from '../Pages/Login';
@@ -55,7 +55,6 @@ class MasterComponent extends Component {
               });
             }
           } else {
-            console.log(history)
             history.go(1);
           }
         });
@@ -68,44 +67,46 @@ class MasterComponent extends Component {
         const { languageId, orgId } = this.props;
         let token = localStorage.getItem("token");
         if (orgId?.organization_id != this.state.orgId?.organization_id) {
-            if (token !== this.state.token) {
-                if (token) {
-                    changeOpenComponent(false);
-                }
-                this.setState({ token: token });
-                this.getWebsiteContent();
-            }
-            if (this.props.createUserData?.userInfo) {
-                if (!this.props.openComponent) {
-                    changeOpenComponent(true)
-                    this.FetchData()
-                }
-            }
-            if (languageId !== this.state.languageId) {
-                this.setState({ languageId: languageId }, () => { this.getWebsiteContent(); });
-            }
-        } else if (this.state.token && !token) {
+            this.setState({ orgId: orgId }, () => { this.getWebsiteContent(); });
+        }
+        if (token !== this.state.token) {
+            if (token) {
+                changeOpenComponent(false);
+            } 
             this.setState({ token: token });
             this.getWebsiteContent();
+        }
+        if (this.props.createUserData?.userInfo) {
+            if (!this.props.openComponent) {
+                changeOpenComponent(true)
+                this.FetchData()
+            }
+        }
+        if (languageId !== this.state.languageId) {
+            this.setState({ languageId: languageId }, () => { this.getWebsiteContent(); });
         }
     } 
 
     FetchData = () => {
         let org = getOrg();
-        let token = localStorage.getItem("token");
-        if (org?.organization_id || !token) {
-            //get login resources
-            this.getWebsiteContent();
-            // reverse back to default primary color
-            document.body.style.setProperty('--primary-color', PRIMARY_COLOR);
-            document.body.style.setProperty('--primary-font-color', PRIMARY_FONT_COLOR);
+        //get login resources
+        this.getWebsiteContent();
+        let primaryColor = PRIMARY_COLOR;
+        let primaryFontColor = PRIMARY_FONT_COLOR;
+        if(org && org.organization_id > 0) {
+            primaryColor = org.primary_color;
+            primaryFontColor = org.primary_font_color;
+        }
+        // reverse back to default primary color
+        document.body.style.setProperty('--primary-color', primaryColor);
+        document.body.style.setProperty('--primary-font-color', primaryFontColor);
 
-            let isLockout = JSON.parse(localStorage.getItem('isLockout'));
-            let timeEnd = JSON.parse(localStorage.getItem('endTime'));
+        let isLockout = JSON.parse(localStorage.getItem('isLockout'));
+        let timeEnd = JSON.parse(localStorage.getItem('endTime'));
 
-            if (timeEnd || (isLockout && isLockout > 2)) {
-                this.setState({ isLockout: true });
-            }
+        if (timeEnd || (isLockout && isLockout > 2)) {
+            this.setState({ isLockout: true });
+            
         }
     }
 
@@ -127,7 +128,7 @@ class MasterComponent extends Component {
     }
 
     onClickLogo = (val) => {
-        changeOpenComponent(val)
+        changeOpenComponent(val);
         if (this.state.token) {
             verifyRoute(this.props.history, `/dashboard`);
         } else {
@@ -156,7 +157,7 @@ class MasterComponent extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
 
                 let resources = resourcesResult.data.data.pageResources;
                 let languages = resourcesResult.data.data.languages;

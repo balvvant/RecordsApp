@@ -86,17 +86,17 @@ const Get404ErrorFunction = (req, res, next) => {
 };
 
 const SetApiRequestFunction = async (req, res, next) => {
-  res.locals.statusCode = STATUS_CODES.OK;
-  if (req.url.includes("/uploads/")) {
-      next();
-  } else {
-      await AuthenticateUser(req, res);
-      if (res.locals.statusCode == STATUS_CODES.OK) {
-          next();
-      } else {
-          SetApiResponseFunction(req, res, next);
-      }
-  }
+    res.locals.statusCode = STATUS_CODES.OK;
+    if (req.url.includes("/uploads/") || req.url.includes("/contentimages/") || req.url.includes("/contentvideos/") || req.url.includes("/contentfiles/") || req.url.includes("/staticpageimages/") || req.url.includes("/organizationlogo/") || req.url.includes("/articleimages/") || req.url.includes("/websitemenuimages/")) {
+        next();
+    } else {
+        await AuthenticateUser(req, res);
+        if (res.locals.statusCode == STATUS_CODES.OK) {
+            next();
+        } else {
+            SetApiResponseFunction(req, res, next);
+        }
+    }
 };
 
 const SetApiResponseFunction = (req, res, next) => {

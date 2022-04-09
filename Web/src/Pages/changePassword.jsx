@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, DashboardStatus, OPERATION_PERMISSION_KEYS,CONSTANTS, resourceFields, resourceGroups, ROLES } from "../Constants/types";
+import { API_METHODS,STATUS_CODES, DashboardStatus, OPERATION_PERMISSION_KEYS,CONSTANTS, resourceFields, resourceGroups, ROLES } from "../Constants/types";
 import { CallApiAsync, CheckPermission, getResourceValue, logOut } from '../Functions/CommonFunctions';
 
 class ChangePassword extends React.PureComponent {
@@ -57,7 +57,7 @@ class ChangePassword extends React.PureComponent {
                 }
             }
             let resourcesResult = await CallApiAsync(obj);
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
                 this.setState({ changePasswordResource: resources });
             }
@@ -148,7 +148,7 @@ class ChangePassword extends React.PureComponent {
                         }
                     }
                     await CallApiAsync(obj).then(data => {
-                        if (data.data.status === 200) {
+                        if (data.data.status === STATUS_CODES.OK) {
                             globalAlert('success', getResourceValue(this.state.changePasswordResource, 'PASSWORD_RESET_SUCCESS'));
                             globalLoader(false)
                             logOut(this.props.history, '/')
@@ -168,11 +168,9 @@ class ChangePassword extends React.PureComponent {
                             globalAlert(CONSTANTS.ERROR, getResourceValue(this.state.changePasswordResource, data.data.status.toString()))
                         }
                     }).catch(err => {
-                        // console.log(err)
                     })
                 }
             }).catch(err => {
-                // console.log(err)
             })
         } catch (error) {
             let errorObject = {
@@ -269,9 +267,7 @@ class ChangePassword extends React.PureComponent {
                             <div className="d-flex" >
                                 <p className="login-txt mb-0 d-flex align-self-center font-20 primary-color">{getResourceValue(this.state.changePasswordResource, "CHANGE_PASSWORD")}</p>
                             </div>
-                            <div className=" btn-wrapper  ">
-                                <button type="submit" className="btn full-width-xs btn-own btn-own-primary min-height-btn mw-100">{getResourceValue(this.state.changePasswordResource, "CHANGE_PASSWORD_BUTTON")}</button>
-                            </div>
+                            
                         </div>
 
                         <div className='content-container cpt-10 cpl-10 cpr-10 cpb-10'>
@@ -357,6 +353,11 @@ class ChangePassword extends React.PureComponent {
                                 </div>
                             </div>
                         </div>
+                        <div className='d-flex justify-content-end cpt-10'>
+                            <div className=" btn-wrapper  ">
+                                    <button type="submit" className="btn full-width-xs btn-own btn-own-primary min-height-btn mw-100">{getResourceValue(this.state.changePasswordResource, "CHANGE_PASSWORD_BUTTON")}</button>
+                                </div>
+                            </div>
                     </form>
                 </div>
             </div>

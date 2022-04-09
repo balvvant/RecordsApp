@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { changeTheScreen, errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, resourceFields, resourceGroups, CONSTANTS,SCREENS, ROLES } from '../Constants/types';
+import { API_METHODS,STATUS_CODES, resourceFields, resourceGroups, CONSTANTS,SCREENS, ROLES } from '../Constants/types';
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
 
 class ResetPasswordComponent extends Component {
@@ -176,7 +176,7 @@ class ResetPasswordComponent extends Component {
                     }
 
                     let resApi = await CallApiAsync(obj);
-                    if (resApi.data.status === 200) {
+                    if (resApi.data.status === STATUS_CODES.OK) {
                         changeTheScreen(SCREENS.LOGIN);
                         globalAlert('success', getResourceValue(this.state.resetPasswordResources, 'PASSWORD_RESET_SUCCESS'));
                         globalLoader(false)
@@ -315,7 +315,7 @@ class ResetPasswordComponent extends Component {
             }
             let resourcesResult = await CallApiAsync(obj);
 
-            if (resourcesResult.data.status === 200) {
+            if (resourcesResult.data.status === STATUS_CODES.OK) {
                 let resources = resourcesResult.data.data.resources;
 
                 this.setState({ resetPasswordResources: resources });

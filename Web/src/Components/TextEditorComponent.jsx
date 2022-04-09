@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { CallApiAsync } from '../Functions/CommonFunctions';
-import { API_METHODS, GLOBAL_API, TEXT_EDITOR_CONSTANTS, TINYMCE_API_KEY } from '../Constants/types';
+import { STATUS_CODES,API_METHODS, GLOBAL_API, TEXT_EDITOR_CONSTANTS, TINYMCE_API_KEY } from '../Constants/types';
 const TextEditor = React.memo((props) => {
     const [editorData, setEditorData] = useState('');
 
@@ -34,12 +34,12 @@ const TextEditor = React.memo((props) => {
                         formData.append('file', blobInfo.blob(), blobInfo.filename());
                         let obj = {
                             method: API_METHODS.POST,
-                            history: this.props.history,
+                            history: props.history,
                             api: '/upload-static-page-image',
                             body: formData
                         }
                         let res = await CallApiAsync(obj);
-                        if(res.data.status == 200){
+                        if(res.data.status == STATUS_CODES.OK){
                             if(res.data.data.data){
                                 let images = props.textEditorImages;
                                 images.push({Key: res.data.data.data});

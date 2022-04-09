@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, resourceFields, RESOURCE_KEYS } from '../Constants/types';
+import { API_METHODS, CONSTANTS, resourceFields, STATUS_CODES,RESOURCE_KEYS } from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField } from '../Functions/CommonFunctions';
 
 const AddEditRecordModal = React.memo((props) => {
@@ -36,7 +36,7 @@ const AddEditRecordModal = React.memo((props) => {
             }
             let recordResult = await CallApiAsync(obj);
             if (recordResult) {
-                if (recordResult.data.status === 200) {
+                if (recordResult.data.status === STATUS_CODES.OK) {
                     let record = recordResult.data.data.UserRecord;
                     setRecordBin(record.RecordBin);
                     setRecordType(record.RecordType);
@@ -85,7 +85,7 @@ const AddEditRecordModal = React.memo((props) => {
                     }
                 }
                 let recordResult = await CallApiAsync(obj);
-                if (recordResult.data.status === 200) {
+                if (recordResult.data.status === STATUS_CODES.OK) {
                     props.onCloseModal(CONSTANTS.SUCCESS)
                 } else {
                     globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, recordResult.data.status.toString()))
