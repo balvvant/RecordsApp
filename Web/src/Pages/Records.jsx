@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal } from "react-responsive-modal";
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, BUTTON_TYPES, CONSTANTS,STATUS_CODES, GLOBAL_API, resourceGroups , RESOURCE_KEYS } from "../Constants/types";
+import { API_METHODS, BUTTON_TYPES, CONSTANTS, STATUS_CODES, GLOBAL_API, resourceGroups , RESOURCE_KEYS } from "../Constants/types";
 import AddEditRecord from '../Modals/AddEditRecordModal';
 import BulkUploadRecords from '../Modals/BulkUploadRecordsModal';
 import CustomTableComponent from "../Components/CustomTableComponent";

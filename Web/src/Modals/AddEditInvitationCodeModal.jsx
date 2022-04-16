@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, resourceFields, RESOURCE_KEYS, INVITATION_CODE_FOR } from '../Constants/types';
+import { API_METHODS, CONSTANTS, resourceFields, RESOURCE_KEYS, STATUS_CODES, INVITATION_CODE_FOR } from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField } from '../Functions/CommonFunctions';
 
 const AddEditInvitationCodeModal = React.memo((props) => {
@@ -30,7 +30,7 @@ const AddEditInvitationCodeModal = React.memo((props) => {
                     }
                 }
                 let ticketResult = await CallApiAsync(obj);
-                if (ticketResult.data.status === 200) {
+                if (ticketResult.data.status === STATUS_CODES.OK) {
                     props.onCloseModal(CONSTANTS.SUCCESS)
                 } else {
                     globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, ticketResult.data.status.toString()))

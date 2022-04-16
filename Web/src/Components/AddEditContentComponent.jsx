@@ -145,7 +145,7 @@ class AddEditContentComponent extends React.PureComponent {
                 api: '/view-search-tags',
             }
             let tagsRes = await Promise.all([CallApiAsync(searcgTagObj), CallApiAsync(obj)]);
-            if (tagsRes[0].data.status === 200 && tagsRes[1].data.status === 200) {
+            if (tagsRes[0].data.status === STATUS_CODES.OK && tagsRes[1].data.status === STATUS_CODES.OK) {
                 let localTag = [];
                 tagsRes[0].data.data.searchTags.forEach(element => {
                     localTag.push({ id: `${element.id}`, text: element.tag });

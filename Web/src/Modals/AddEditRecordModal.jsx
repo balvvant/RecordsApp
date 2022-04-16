@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, resourceFields, STATUS_CODES,RESOURCE_KEYS } from '../Constants/types';
+import { API_METHODS, CONSTANTS, resourceFields, STATUS_CODES, RESOURCE_KEYS } from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField } from '../Functions/CommonFunctions';
 
 const AddEditRecordModal = React.memo((props) => {

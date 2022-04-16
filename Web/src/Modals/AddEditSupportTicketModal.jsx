@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, CONSTANTS, resourceFields, RESOURCE_KEYS } from '../Constants/types';
+import { API_METHODS, CONSTANTS, resourceFields, STATUS_CODES, RESOURCE_KEYS } from '../Constants/types';
 import { CallApiAsync, getResourceValue, ValidateField } from '../Functions/CommonFunctions';
 
 const AddEditSupportTicketModal = React.memo((props) => {
@@ -31,7 +31,7 @@ const AddEditSupportTicketModal = React.memo((props) => {
             }
             let ticketResult = await CallApiAsync(obj);
             if (ticketResult) {
-                if (ticketResult.data.status === 200) {
+                if (ticketResult.data.status === STATUS_CODES.OK) {
                     setMessageHeader(ticketResult.data.data.UserTicket.MessageHeader);
                     setMessageBody(ticketResult.data.data.UserTicket.MessageBody);
                     setMessageResponse(ticketResult.data.data.UserTicket.MessageResponse);
@@ -69,7 +69,7 @@ const AddEditSupportTicketModal = React.memo((props) => {
                     }
                 }
                 let ticketResult = await CallApiAsync(obj);
-                if (ticketResult.data.status === 200) {
+                if (ticketResult.data.status === STATUS_CODES.OK) {
                     props.onCloseModal(CONSTANTS.SUCCESS)
                 } else {
                     globalAlert(CONSTANTS.ERROR, getResourceValue(props.resources, ticketResult.data.status.toString()))

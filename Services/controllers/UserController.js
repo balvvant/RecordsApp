@@ -143,9 +143,9 @@ const GetUsers = async(req, res, next) => {
         let users = await My_SQL.runQuery(`SELECT A.UserID, A.UserName, B.role_name, A.EmailID, A.BTCAddress, A.JabberID, A.TelegramID, 
                 A.ActivationStatus, SUM(C.PaymentAmount) AS Earnings, SUM(D.PaymentAmount) AS Expenses  
                 FROM users A 
-                    INNER JOIN roles B ON A.UserRole = B.role_id
-                    INNER JOIN UserPayments C ON A.UserID= C.ToUserID AND C.PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'
-                    INNER JOIN UserPayments D ON A.UserID= D.ToUserID AND D.PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}' 
+                    LEFT JOIN roles B ON A.UserRole = B.role_id
+                    LEFT JOIN UserPayments C ON A.UserID= C.ToUserID AND C.PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'
+                    LEFT JOIN UserPayments D ON A.UserID= D.ToUserID AND D.PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}' 
                 GROUP BY A.UserID
                 ORDER BY A.UserID`);
         if (users && users.error == 0) {
@@ -190,9 +190,9 @@ const GetUserDetail = async(req, res, next) => {
         let sqlQuery = `SELECT A.UserID, A.UserName, B.role_name, A.EmailID, A.BTCAddress, A.JabberID, A.TelegramID, 
         A.ActivationStatus, SUM(C.PaymentAmount) AS Earnings, SUM(D.PaymentAmount) AS Expenses  
         FROM users A 
-            INNER JOIN roles B ON A.UserRole = B.role_id
-            INNER JOIN UserPayments C ON A.UserID= C.ToUserID AND C.PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'
-            INNER JOIN UserPayments D ON A.UserID= D.ToUserID AND D.PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}' 
+            LEFT JOIN roles B ON A.UserRole = B.role_id
+            LEFT JOIN UserPayments C ON A.UserID= C.ToUserID AND C.PaymentType = '${CONSTANTS.PaymentTypes.CREDIT}'
+            LEFT JOIN UserPayments D ON A.UserID= D.ToUserID AND D.PaymentType = '${CONSTANTS.PaymentTypes.DEBIT}' 
         WHERE A.UserID = ${userId}`;
         let queryResult = await My_SQL.runQuery(sqlQuery);
         if (queryResult && queryResult.error == 0) {

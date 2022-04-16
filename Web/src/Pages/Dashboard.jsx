@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal } from "react-responsive-modal";
 import { withRouter } from 'react-router-dom';
 import { errorLogger, globalAlert, globalLoader } from '../actions/commonActions';
-import { API_METHODS, BUTTON_TYPES, CONSTANTS, GLOBAL_API, resourceGroups , RESOURCE_KEYS } from "../Constants/types";
+import { API_METHODS, BUTTON_TYPES, CONSTANTS, STATUS_CODES, GLOBAL_API, resourceGroups , RESOURCE_KEYS } from "../Constants/types";
 import AddEditTicket from '../Modals/AddEditSupportTicketModal';
 import CustomTableComponent from "../Components/CustomTableComponent";
 import { CallApiAsync, getResourceValue } from '../Functions/CommonFunctions';
@@ -34,7 +34,7 @@ class Dashboard extends Component {
                 }
             }
             let recordsResult = await CallApiAsync(obj);
-            if (recordsResult.data.status === 200) {
+            if (recordsResult.data.status === STATUS_CODES.OK) {
                 if (recordsResult.data.data?.PageResources && recordsResult.data.data?.PageResources.length > 0 && this.state.resources.length == 0) {
                     let resources = recordsResult.data.data.PageResources;
                     localStorage.setItem("resources", JSON.stringify(resources));

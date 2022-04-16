@@ -5,9 +5,7 @@ import {
     CHANGED_SCREEN, RESET_PARAM, ACTIVATE_PARAM, CURRENT_SIDEBAR, CURRENT_SIDEBAR_SUBMENU, ROLE_KEY, RESOURCE_KEY,
     CATEGORY_TYPE, FILTER_TYPES, IS_CATEGORY_TYPE_SHOW, CONTENT_BASKET, SHOW_BASKET_VIEW, VIEW_TYPE, SHOW_CATEGORIES,
     GLOBAL_RENDER, OLD_RESOURCE_KEY, FEATURES, OPERATION_LIST, FEATURE_ID, SHOW_LANGUAGE, SHOW_BASKET,
-    HEADER_CONTENT,
-    OTHER_USER_DATA,
-    ORGANIZATIONS_LIST
+    HEADER_CONTENT, OTHER_USER_DATA, ORGANIZATIONS_LIST, STATUS_CODES
 } from '../Constants/types';
 import Axios from "axios";
 import { httpHeaderOwn, logOut, CallApiAsync, clearStorage } from '../Functions/CommonFunctions';
@@ -444,7 +442,7 @@ const FetchOperationList = async (history) => {
         }
         let recordResult = await CallApiAsync(obj);
         if (recordResult) {
-            if (recordResult.data.status === 200) {
+            if (recordResult.data.status === STATUS_CODES.OK) {
                 let operation = recordResult.data?.data?.operation_list;
                 if(operation && operation.length > 0){
                     localStorage.setItem('operationList', JSON.stringify(operation));

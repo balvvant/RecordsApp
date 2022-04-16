@@ -159,7 +159,7 @@ const GetRecordsForBuying = async (req, res, next) => {
         let searchColumn = req.body.search_column ? req.body.search_column : "";
         let viewRecords = req.body.view_records ? parseInt(req.body.view_records) : CONSTANTS.OtherConstants.Default_View_Records;
         let viewPage = req.body.view_page ? parseInt(req.body.view_page) : CONSTANTS.OtherConstants.Default_View_Page;
-        let whereCondition = `RecordStatus= '${CONSTANTS.RecordStatues.ADDED} AND RecordIsActive = ${CONSTANTS.Status.Active_Status}`;
+        let whereCondition = `RecordStatus= '${CONSTANTS.RecordStatues.ADDED}`;
         if (searchString.length > 0) {
             if (searchColumn) {
                 whereCondition += ` AND (${searchColumn} LIKE '${searchString}')`;
@@ -240,16 +240,17 @@ const GetUserRecordsbasedOnStatus = async (req, res, next) => {
         let viewRecords = req.body.view_records ? parseInt(req.body.view_records) : CONSTANTS.OtherConstants.Default_View_Records;
         let viewPage = req.body.view_page ? parseInt(req.body.view_page) : CONSTANTS.OtherConstants.Default_View_Page;
         let cartItemsOnly = req.body.cartItemsOnly;
-        let whereCondition = `RecordIsActive = ${CONSTANTS.Status.Active_Status}`;
+        //this code filters all the null values. this is purposely done so that we can eliminate the if conditions in query where clause
+        let whereCondition = "CreatedByID LIKE '%'";
         if(res.locals.roleId== Roles.Seller){
             whereCondition += ` AND CreatedByID = ${res.locals.userId}`;
         } else if(res.locals.roleId== Roles.Buyer){
-            whereCondition += ` AND ModifiedByID = ${res.locals.userId}`;
-            if (cartItemsOnly ==1){
-                whereCondition += ` AND RecordStatus = ${RecordStatues.INCART}`;
-            } else {
-                whereCondition += ` AND RecordStatus = ${RecordStatues.SOLD}`;
-            }
+            whereCondition += ` AND ModifiedByID = ${res.locals.userId} AND RecordStatus = ${RecordStatues.SOLD}`;
+            //if (cartItemsOnly ==1){
+            //    whereCondition += ` AND RecordStatus = ${RecordStatues.INCART}`;
+            //} else {
+            //    whereCondition += ` AND RecordStatus = ${RecordStatues.SOLD}`; 
+            //}
         }
         if (searchString.length > 0) {
             whereCondition += ` AND (RecordBin LIKE '${searchString}' OR RecordType LIKE '${searchString}' OR RecordSubType LIKE '${searchString}' OR RecordCountry LIKE '${searchString}' OR RecordState LIKE '${searchString}' OR RecordCity LIKE '${searchString}' OR RecordZip LIKE '${searchString}' OR RecordExp LIKE '${searchString}')`;
@@ -461,7 +462,7 @@ const ArchiveRecord = async (req, res, next) => {
             statusMessage = "RECORD_UPDATED";
             let updateRecordQuery = await DB_SQL.runQuery(
                 `UPDATE UserRecords 
-                SET RecordIsActive = ${CONSTANTS.Status.Inactive_Status}, ModifiedByID = ${userId}, ModifiedAt = UTC_TIMESTAMP() 
+                SET RecordStatus = ${CONSTANTS.RecordStatues.SUSPENDED}, ModifiedByID = ${userId}, ModifiedAt = UTC_TIMESTAMP() 
                 WHERE RecordID = '${recordId}'`
             );
             if (updateRecordQuery && updateRecordQuery.error > 0) {
